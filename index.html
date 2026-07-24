@@ -2108,4 +2108,15 @@
             toast(l === "fr" ? "On parle français ! 🇫🇷" : "¡Hablamos español! 🇪🇸");
         }
         /* current-selection state that depends on the languages thats basically chosen like spanish or french */
-    
+
+        let vCat, fCat, qCat = "All", pCat, vb, tense, lCat = "Words";
+        function resetSelections() {
+            const cats = Object.keys(L().VOCAB);
+            if (!cats.includes(vCat)) vCat = cats[0];
+            if (!cats.includes(fCat)) fCat = cats[0];
+            const pcats = Object.keys(L().PHRASES);
+            if (!pcats.includes(pCat)) pCat = pcats[0];
+            const verbs = Object.keys(L().VERBS); vb = verbs[0];
+            tense = Object.keys(L().VERBS[vb].tenses)[0];
+
+        }
