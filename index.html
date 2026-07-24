@@ -2120,3 +2120,94 @@
             tense = Object.keys(L().VERBS[vb].tenses)[0];
 
         }
+
+        /* ============================================================
+   BRAND / HOME
+   ============================================================ */
+
+
+        function renderBrand() { const f = $("#brand-flag"); f.innerHTML = ""; L().flagColors.forEach(c => { const s = document.createElement("span"); s.style.background = c; f.appendChild(s); }); }
+
+        function renderGreeting() {
+            const h = new Date().getHours(); const hel = L().hello;
+
+
+            $("#greeting").textContent = h < 12 ? hel.morning : h < 18 ? hel.afternoon : hel.evening;
+        }
+
+        function renderWOTD() {
+            const
+                all = Object.values(L().VOCAB).flat(); const
+                    w = all[Math.floor(Date.now() / 864e5) % all.length];
+            $("#wotd-fr").textContent = w[0]; $("#wotd-ph").textContent = "/ " + w[2] + " /"; $("#wotd-en").textContent = w[1];
+
+            $("#wotd-fr").textContent = w[0]; $("#wotd-ph").textContent = "/ " + w[2] + " /"; $("#wotd-en").textContent = w[1];
+            $("#wotd-say").onclick = () => { speak(w[0]); markLearned(w[0]); };
+        }
+
+        const HOME_TILES = [["📖", "Vocabulary", "120 words per language", "vocab"], ["🃏", "Flashcards", "Flip & remember", "flash"], ["🎯", "Quiz", "Earn XP", "quiz"], ["🧩", "Match", "Pair them up", "match"], ["👂", "Listen", "Type what you hear", "listen"], ["⌨️", "Spell", "Spell the word", "spell"], ["🔮", "Verbs", "3 tenses", "verbs"], ["💬", "Phrases", "Survival language", "phrases"]];
+        function renderHomeTiles() {
+            const box = $("#home-tiles"); box.innerHTML = "";
+
+            const total = Object.values(L().VOCAB).flat().length;
+            HOME_TILES.forEach(([ico, t, d, tab]) => {
+                const el = document.createElement("div"); el.className = "tile"; let pct = 0;
+
+
+
+                if (tab === "vocab") pct = Math.round(Object.values(L().VOCAB).flat().filter(w => learnedMap()[w[0]]).length / total * 100);
+
+
+                el.innerHTML = `<div class="ico">${ico}</div><h3>${t}</h3><p>${d}</p><div class="bar"><i style="width:${pct}%"></i></div>`;
+                el.onclick = () => goTab(tab); box.appendChild(el);
+            });
+        }
+
+
+        /* VOCAB ======== */
+
+        function renderVocabCats() {
+            const box = $("#vocab-cats"); box.innerHTML = "";
+            Object.keys(L().VOCAB).forEach(c => {
+                const b = document.createElement("button"); b.className = "chip" + (c === vCat ? " active" : ""); b.textContent = c;
+
+
+
+
+
+                b.onclick = () => { vCat = c; $("#vocab-search").value = ""; rendeVocabCats(); renderVocabGrid(); }; box.appendChild(b);
+            });
+        }
+
+        function wordCard(w) {
+            const el = document.createElement("div"); el.className = "word"; const fav = !!favMap()[w[0]];
+
+
+
+            el.innerHTML = `<span class="fr">${w[0]}</span><span class="ph">/ ${w[2]} /</span><span class="en">${w[1]}</span>
+
+ <div class="row"><button class="say">🔊 Hear</button><button class="fav ${fav ? 'on' : ''}">⭐</button></div>`;
+            el.querySelector(".say").onclick = () => { speak(w[0]); markLearned(w[0]); addXP(2); toast("+2 XP · " + w[0]); };
+            el.querySelector(".fav").onclick = e => {
+                if (favMap()[w[0]]) { delete favMap()[w[0]]; e.target.classList.remove("on"); }
+                else { favMap()[w[0]] = w; e.target.classList.add("on"); toast("⭐ Saved!"); } save();
+            };
+            return el;
+        }
+
+
+
+        function renderVocabGrid(list) {
+            const box = $("#vocab-grid"); box.innerHTML = "";
+
+            (list || L().VOCAB[vCat]).forEach(w => box.appendChild(wordCard(w)));
+        }
+        $("#vocab-search").addEventListener("input", e => {
+            const q = fold(e.target.value); if (!q) { renderVocabGrid(); return; }
+
+
+            const hits = Object.values(L().VOCAB).flat().filter(w => fold(w[0]).includes(q) || fold(w[1]).includes(q));
+            if (hits.length) renderVocabGrid(hits); else $("#vocab-grid").innerHTML = "<p>No matches - try another word.</p>";
+        });
+
+        /* == FLASHCARDS logic etc */
