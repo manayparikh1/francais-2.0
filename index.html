@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonjour & Hola! — Learn French + Spanish</title>
+    <style>
+        /* ============================================================
+  Helps learn French and Spanish with a simple interface and a clean design and it combines 2 of my old designs which is lowk prettyy nice
+   ============================================================ */
+        :root {
+            --bg: #f5f1ea;
+            /* PLAIN background */
+            --card: #ffffff;
+            --cream-2: #f1ebe1;
+            --peach: #ffd9b7;
+            --peach-deep: #ffb877;
+            --honey: #ffcf5c;
+            --sage: #cfeacf;
+            --sage-deep: #86c79a;
+            --sky: #cfe4ff;
+            --sky-deep: #7fb7f0;
+            --rose: #ffcacc;
+            --rose-deep: #ff9a9a;
+            --lav: #e2d6ff;
+            --lav-deep: #b39df0;
+            --mint: #cdeee4;
+            --mint-deep: #6cc7 b0;
+            --ink: #4d3f31;
+            --ink-soft: #8a7460;
+            --line: #ece4d8;
+            --shadow: rgba(120, 90, 60, .14);
+            --radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue", cursive;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100%;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit
+        }
+
+        .wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 18px 100px
+        }
+
+        /* ============================================================
+   The header thats polished and looks good
+   ============================================================ */
+        header.top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            background: var(--card);
+            border: 2px solid var(--line);
+            border-radius: var(--radius);
+            padding: 16px 22px;
+            box-shadow: 0 8px 22px var(--shadow);
+            margin-bottom: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .brand .flag {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            flex: 0 0 auto;
+            box-shadow: 0 3px 8px var(--shadow)
+        }
+
+        .brand .flag span {
+            flex: 1
+        }
+
+        .brand h1 {
+            font-size: 1.45rem
+        }
+
+        .brand p {
+            font-size: .8rem;
+            color: var(--ink-soft);
+            margin-top: -2px
+        }
+
+        .stats {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            background: var(--cream-2);
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            padding: 7px 13px;
+            text-align: center;
+            min-width: 66px
+        }
+
+        .stat .big {
+            font-size: 1.2rem;
+            font-weight: bold
+        }
+
+        .stat .lbl {
+            font-size: .62rem;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .stat.streak .big {
+            color: var(--peach-deep)
+        }
+
+        .stat.xp .big {
+            color: var(--sky-deep)
+        }
+
+        .stat.lvl .big {
+            color: var(--lav-deep)
+        }
+
+        .stat.words .big {
+            color: var(--sage-deep)
+        }
+
+        .levelbar {
+            height: 8px;
+            background: var(--cream-2);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 5px;
+            width: 150px
+        }
+
+        .levelbar>i {
+            display: block;
+            height: 100%;
+            background: var(--lav-deep);
+            width: 0;
+            transition: width .5s
+        }
+
+        /* language switch */
+        .langswitch {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            flex-wrap: wrap
+        }
+
+        .langbtn {
+            cursor: pointer;
+            border: 2px solid var(--line);
+            background: var(--card);
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform .12s, background .2s, border-color .2s
+        }
+
+        .langbtn:hover {
+            transform: translateY(-2px)
+        }
+
+        .langbtn.active {
+            background: var(--honey);
+            border-color: var(--peach-deep)
+        }
+
+        /* ---------- Nav ---------- */
+        nav.tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px
+        }
+
+        .tab {
+            font-size: .88rem;
+            cursor: pointer;
+            border: 2px solid var(--line);
+            background: var(--card);
+            color: var(--ink);
+            padding: 9px 14px;
+            border-radius: 999px;
+            box-shadow: 0 3px 10px var(--shadow);
+            transition: transform .12s, background .2s, border-color .2s;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .tab:hover {
+            transform: translateY(-2px)
+        }
+
+        .tab.active {
+            background: var(--honey);
+            border-color: var(--peach-deep)
+        }
+
+        .tab .emoji {
+            font-size: 1.02rem
+        }
+
+        /* -------- Panels & cards for the languages --------- */
+
+        .panel {
+            display: none;
+            animation: pop .3s ease
+        }
+
+        .panel.show {
+            display: block
+        }
+
+        @keyframes pop {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border: 2px solid var(--line);
+            border-radius: var(--radius);
+            padding: 22px;
+            box-shadow: 0 8px 22px var(--shadow);
+            margin-bottom: 20px
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .card .sub {
+            color: var(--ink-soft);
+            font-size: .9rem;
+            margin-bottom: 16px
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin: 6px 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        /* buttonss */
+
+        .btn {
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 14px;
+            color: var(--ink);
+            background: var(--peach);
+            box-shadow: 0 5px 0 var(--peach-deep);
+            transition: transform .08s, box-shadow .08s
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 var(--peach-deep)
+        }
+
+        .btn.sky {
+            background: var(--sky);
+            box-shadow: 0 5px 0 var(--sky-deep)
+        }
+
+        .btn.sage {
+            background: var(--sage);
+            box-shadow: 0 5px 0 var(--sage-deep)
+        }
+
+        .btn.rose {
+            background: var(--rose);
+            box-shadow: 0 5px 0 var(--rose-deep)
+        }
+
+        .btn.lav {
+            background: var(--lav);
+            box-shadow: 0 5px 0 var(--lav-deep)
+        }
+
+        .btn.small {
+            padding: 8px 14px;
+            font-size: .85rem;
+            border-radius: 11px
+        }
+
+        .btn.ghost {
+            background: var(--card);
+            box-shadow: 0 3px 0 var(--line);
+            border: 2px solid var(--line)
+        }
+
+        .btn:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        /* chips */
+        .catbar {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-bottom: 14px
+        }
+
+        .chip {
+            cursor: pointer;
+            border: 2px solid var(--peach);
+            background: var(--card);
+            padding: 6px 13px;
+            border-radius: 999px;
+            font-size: .83rem;
+            transition: background .2s, transform .1s
+        }
+
+        .chip:hover {
+            transform: translateY(-2px)
+        }
+
+        .chip.active {
+            background: var(--peach)
+        }
+
+        /* home */
+        .hero {
+            background: var(--peach);
+            border-radius: var(--radius);
+            padding: 26px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 22px var(--shadow)
+        }
+
+        .hero h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px
+        }
+
+        .hero p {
+            max-width: 62ch
+        }
+
+        .homegrid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px
+        }
+
+        @media(max-width:720px) {
+            .homegrid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .goal-ring {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 6px
+        }
+
+        .ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(var(--sage-deep) var(--deg, 0deg), var(--cream-2) 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .ring .inner {
+            width: 92px;
+            height: 92px;
+            border-radius: 50%;
+            background: var(--card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center
+        }
+
+        .ring .inner b {
+            font-size: 1.5rem
+        }
+
+        .ring .inner small {
+            font-size: .7rem;
+            color: var(--ink-soft)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px
+        }
+
+        .tile {
+            background: var(--card);
+            border: 2px solid var(--line);
+            border-radius: var(--radius);
+            padding: 18px;
+            cursor: pointer;
+            transition: transform .12s, border-color .2s;
+            box-shadow: 0 6px 16px var(--shadow)
+        }
+
+        .tile:hover {
+            transform: translateY(-4px);
+            border-color: var(--peach)
+        }
+
+        .tile .ico {
+            font-size: 2rem;
+            margin-bottom: 8px
+        }
+
+        .tile h3 {
+            font-size: 1.05rem;
+            margin-bottom: 3px
+        }
+
+        .tile p {
+            font-size: .8rem;
+            color: var(--ink-soft)
+        }
+
+        .tile .bar {
+            height: 8px;
+            background: var(--cream-2);
+            border-radius: 99px;
+            margin-top: 11px;
+            overflow: hidden
+        }
+
+        .tile .bar>i {
+            display: block;
+            height: 100%;
+            background: var(--sage-deep);
+            border-radius: 99px;
+            width: 0;
+            transition: width .6s
+        }
+
+        /* vocab */
+        .searchbox {
+            width: 100%;
+            font-size: 1rem;
+            padding: 11px 16px;
+            border-radius: 14px;
+            border: 2px solid var(--line);
+            background: var(--card);
+            color: var(--ink);
+            margin-bottom: 14px
+        }
+
+        .searchbox:focus {
+            outline: none;
+            border-color: var(--peach-deep)
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 13px
+        }
+
+        .word {
+            background: var(--bg);
+            border: 2px solid var(--line);
+            border-radius: 16px;
+            padding: 14px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            position: relative;
+            transition: transform .1s
+        }
+
+        .word:hover {
+            transform: translateY(-3px)
+        }
+
+        .word .fr {
+            font-size: 1.2rem;
+            font-weight: bold
+        }
+
+        .word .en {
+            color: var(--ink-soft);
+            font-size: .9rem
+        }
+
+        .word .ph {
+            color: var(--sky-deep);
+            font-size: .78rem;
+            font-style: italic
+        }
+
+        .word .row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 6px
+        }
+
+        .word .say {
+            cursor: pointer;
+            border: none;
+            background: var(--sky);
+            border-radius: 11px;
+            padding: 5px 10px;
+            font-size: .78rem;
+            box-shadow: 0 3px 0 var(--sky-deep)
+        }
+
+        .word .say:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--sky-deep)
+        }
+
+        .word .fav {
+            cursor: pointer;
+            font-size: 1.15rem;
+            background: none;
+            border: none;
+            line-height: 1;
+            filter: grayscale(1);
+            opacity: .55
+        }
+
+        .word .fav.on {
+            filter: none;
+            opacity: 1
+        }
+
+        /* flashcards */
+        .flash-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 430px;
+            height: 260px;
+            perspective: 1200px;
+            cursor: pointer
+        }
+
+        .flashcard .inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform .6s;
+            transform-style: preserve-3d
+        }
+
+        .flashcard.flipped .inner {
+            transform: rotateY(180deg)
+        }
+
+        .flashcard .face {
+            position: absolute;
+            inset: 0;
+            backface-visibility: hidden;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 12px 28px var(--shadow);
+            padding: 24px;
+            text-align: center;
+            border: 2px solid var(--line)
+        }
+
+        .flashcard .front {
+            background: var(--sky)
+        }
+
+        .flashcard .back {
+            background: var(--peach);
+            transform: rotateY(180deg)
+        }
+
+        .flashcard .big-word {
+            font-size: 2rem;
+            font-weight: bold
+        }
+
+        .flashcard .hint {
+            font-size: .82rem;
+            color: var(--ink-soft)
+        }
+
+        .flash-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center
+        }
+
+        .flash-progress {
+            font-size: .9rem;
+            color: var(--ink-soft)
+        }
+
+        /* quiz function */
+        .quiz-q {
+            font-size: 1.35rem;
+            text-align: center;
+            margin: 10px 0 18px
+        }
+
+        .quiz-opts {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        .opt {
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid var(--line);
+            background: var(--card);
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform .1s, background .2s, border-color .2s
+        }
+
+        .opt:hover {
+            transform: translateY(-3px);
+            border-color: var(--peach)
+        }
+
+        .opt.correct {
+            background: var(--sage);
+            border-color: var(--sage-deep);
+            animation: goodpop .4s
+        }
+
+        .opt.wrong {
+            background: var(--rose);
+            border-color: var(--rose-deep);
+            animation: shake .4s
+        }
+
+        @keyframes goodpop {
+            0% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.05)
+            }
+
+            100% {
+                transform: scale(1)
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            25% {
+                transform: translateX(-7px)
+            }
+
+            75% {
+                transform: translateX(7px)
+            }
+        }
+
+
+        .pbar {
+            height: 11px;
+            background: var(--cream-2);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-bottom: 16px
+        }
+
+        .pbar>i {
+            display: block;
+            height: 100%;
+            background: var(--sky-deep);
+            width: 0;
+            transition: width .4s
+        }
+
+        .quiz-feedback {
+            text-align: center;
+            font-size: 1.05rem;
+            margin-top: 14px;
+            min-height: 26px
+        }
+
+        /*match game*/
+        .match-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px
+        }
+
+        .match-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .mcard {
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid var(--line);
+            background: var(--card);
+            padding: 14px;
+            border-radius: 14px;
+            text-align: center;
+            transition: transform .1s, background .2s, border-color .2s
+        }
+
+        .mcard:hover {
+            transform: translateY(-2px);
+            border-color: var(--peach)
+        }
+
+        .mcard.sel {
+            background: var(--honey);
+            border-color: var(--peach-deep)
+        }
+
+        .mcard.done {
+            background: var(--sage);
+            border-color: var(--sage-deep);
+            opacity: .55;
+            cursor: default;
+            pointer-events: none
+        }
+
+        .mcard.miss {
+            animation: shake .4s
+        }
+
+
+        /*listen and spell function*/
+
+        .type-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center
+        }
+
+        .big-speaker {
+            font-size: 3.4rem;
+            cursor: pointer;
+            user-select: none;
+            transition: transform .15s
+        }
+
+        .big-speaker:active {
+            transform: scale(.9)
+        }
+
+        .type-input {
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 12px 16px;
+            border-radius: 14px;
+            border: 2px solid var(--line);
+            background: var(--card);
+            color: var(--ink);
+            width: 100%;
+            max-width: 420px
+        }
+
+        .type-input:focus {
+            outline: none;
+            border-color: var(--peach-deep)
+        }
+
+        .reveal {
+            font-size: 1.25rem;
+            font-weight: bold;
+            min-height: 30px
+        }
+
+        .prompt-big {
+            font-size: 1.6rem;
+            font-weight: bold
+        }
+
+
+        /* verbs */
+
+        .conj-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px
+        }
+
+        .conj-table td {
+            padding: 10px 14px;
+            border-bottom: 2px solid var (--line)
+        }
+
+        .conj-table td.pronoun {
+            color: var(--ink-soft);
+            width: 120px
+        }
+
+        .conj-table td .say {
+            cursor: pointer;
+            border: none;
+            background: var(--sky);
+            border-radius: 9px;
+            padding: 3px 8px;
+            font-size: .72rem;
+            margin-left: 8px
+        }
+
+
+        .tense-note {
+            background: var(--cream-2);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: .85rem;
+            color: var(--ink-soft);
+            margin-top: 12px
+        }
+
+
+        /* phrases for the langs */
+
+        .phrase {
+            background: var(--bg);
+            border: 2px solid var(--line);
+            border-radius: 15px;
+            padding: 13px 15px;
+            margin-bottom: 9px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px
+        }
+
+        .phrase .fr {
+            font-size: 1.1rem;
+            font-weight: bold
+        }
+
+        .phrase .en {
+            color: var(--ink-soft);
+            font-size: .86rem
+        }
+
+        /*numerals*/
+        .num-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+            gap: 11px
+        }
+
+        .num {
+            background: var(--card);
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform .1s, background .2s
+        }
+
+        .num:hover {
+            transform: translateY(-3px);
+            background: var(--cream-2)
+        }
+
+        .num .d {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--sky-deep)
+        }
+
+        .num .w {
+            font-size: .92rem
+        }
+
+        /*grammar*/
+
+        .acc {
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            background: var(--card)
+        }
+
+        .acc-head {
+            cursor: pointer;
+            padding: 14px 16px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .acc-body {
+            padding: 0 16px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .3s, padding .3s;
+            color: var(--ink-soft);
+            font-size: .92rem
+        }
+
+        .acc.open .acc-body {
+            max-height: 700px;
+            padding: 0 16px 16px
+        }
+
+        .acc-body b {
+            color: var(--ink)
+        }
+
+        .acc-body ul {
+            margin: 8px 0 0 18px
+        }
+
+        .acc-body li {
+            margin-bottom: 4px
+        }
+
+
+        /*progress
+*/
+        .prog-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 11px
+        }
+
+        .prog-row .name {
+            width: 170px;
+            font-size: .9rem
+        }
+
+        .prog-row .bar {
+            flex: 1;
+            height: 13px;
+            background: var(--cream-2);
+            border-radius: 99px;
+            overflow: hidden
+        }
+
+        .prog-row .bar>i {
+            display: block;
+            height: 100%;
+            border-radius: 99px;
+            width: 0;
+            transition: width .8s
+        }
+
+        .prog-row .pct {
+            width: 52px;
+            text-align: right;
+            font-size: .85rem;
+            color: var(--ink-soft)
+        }
+
+        .badges {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px
+        }
+
+        .badge {
+            background: var(--bg);
+            border: 2px solid var(--line);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            opacity: .45;
+            filter: grayscale(1);
+            transition: .2s
+        }
+
+        .badge.earned {
+            opacity: 1;
+            filter: none;
+            border-color: var(--honey);
+            background: var(--card)
+        }
+
+        .badge .b-ico {
+            font-size: 2rem
+        }
+
+        .badge .b-name {
+            font-size: .85rem;
+            font-weight: bold;
+            margin-top: 4px
+        }
+
+        .badge .b-desc {
+            font-size: .72rem;
+            color: var(--ink-soft)
+        }
+
+        /*settings*/
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            padding: 12px
+        }
+
+        .setting-row:last-child {
+            border-bottom: none
+        }
+
+        .setting-row:last-child {
+            border-bottom: none
+        }
+
+        select,
+        .set-select {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 2px solid var(--line);
+            background: var(--card);
+            color: var(--ink)
+        }
+
+        input[type=range] {
+            accent-color: var (--peach-deep)
+        }
+
+        /*confetti*/
+        #toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(120px);
+            background: var(--ink);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 15px;
+            font-size: .95rem;
+            box-shadow: 0 10px 24px var(--shadow);
+            z-index: 80;
+            transition: transform .35s;
+            max-width: 90vw;
+            text-align: center
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0)
+        }
+
+        .confetti {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 14px;
+            z-index: 90;
+            pointer-events: none;
+            border-radius: 2px
+        }
+
+        footer {
+            text-align: center;
+            color: var(--ink-soft);
+            font-size: .8rem;
+            padding: 22px 0 10px
+        }
+
+        @media(max-width:560px) {
+            .quiz-opts {
+                grid-template-columns: 1fr
+            }
+
+            .brand h1 {
+                font-size: 1.15rem
+            }
+
+            .hero h2 {
+                font-size: 1.3rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+
+        <!--- HEADER -->
+
+        <header class="top">
+            <div class="brand">
+                <div class="flag" id="brand-flag"></div>
+                <div>
+                    <h1 id="brand-title">Bonjour &amp; Hola&nbsp;! 🥐</h1>
+                    <p id="brand-sub">Learn French + Spanish — warm, human, offline</p>
+                    <div class="levelbar"><i id="lvl-bar"></i></div>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat lvl">
+                    <div class="big" id="s-lvl">1</div>
+                    <div class="lbl">🎖️ Level</div>
+                </div>
+                <div class="stat streak">
+                    <div class="big" id="s-streak">0</div>
+                    <div class="lbl">🔥 Streak</div>
+                </div>
+                <div class="stat xp">
+                    <div class="big" id="s-xp">0</div>
+                    <div class="lbl">⭐ XP</div>
+                </div>
+                <div class="stat words">
+                    <div class="big" id="s-words">0</div>
+                    <div class="lbl">📚 Learned</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- LANGUAGE SWITCH -mode-->
+        <div class="langswitch">
+            <button class="langbtn active" data-lang="fr">🇫🇷 Français</button>
+            <button class="langbtn" data-lang="es">🇪🇸 Español</button>
+        </div>
+
+        <!--Nav-->
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="home"><span class="emoji">🏡</span>Home</button>
+            <button class="tab" data-tab="vocab"><span class="emoji">📖</span>Vocabulary</button>
+            <button class="tab" data-tab="flash"><span class="emoji">🃏</span>Flashcards</button>
+            <button class="tab" data-tab="quiz"><span class="emoji">🎯</span>Quiz</button>
+            <button class="tab" data-tab="match"><span class="emoji">🧩</span>Match</button>
+            <button class="tab" data-tab="listen"><span class="emoji">👂</span>Listen</button>
+            <button class="tab" data-tab="spell"><span class="emoji">⌨️</span>Spell</button>
+            <button class="tab" data-tab="verbs"><span class="emoji">🔮</span>Verbs</button>
+            <button class="tab" data-tab="phrases"><span class="emoji">💬</span>Phrases</button>
+            <button class="tab" data-tab="numbers"><span class="emoji">🔢</span>Numbers</button>
+            <button class="tab" data-tab="grammar"><span class="emoji">📖</span>Grammar</button>
+            <button class="tab" data-tab="settings"><span class="emoji">⚙️</span>Settings
+            </button>
+        </nav>
+
+        <!--home-->
+        <section class="panel show" id="home">
+            <div class="hero">
+                <h2 id="greeting">Salut&nbsp;!</h2>
+                <p>Fun small games, moderate quizzes, and good pronunciation of French and Spanish. You can switch
+                    between languages at any time and everything is kept in your browser. 🌼</p>
+            </div>
+            <div class="homegrid">
+                <div class="card" style="margin:0">
+                    <h2>Word of the day</h2>
+                    <div class="sub" id="wotd-sub">A little something to carry with you</div>
+                    <div class="word" id="wotd" style="max-width:340px">
+                        <span class="fr" id="wotd-fr">—</span>
+                        <span class="ph" id="wotd-ph"></span>
+                        <span class="en" id="wotd-en"></span>
+                        <div class="row"><button class="say" id="wotd-say">🔊 Hear it</button></div>
+
+                    </div>
+                </div>
+                <h2 class="section-title">JUMP right IN</h2>
+                <div class="grid" id="home-tiles"></div>
+        </section>
+
+        <!--Vocabulary-->
+        <section class="panel" id="vocab">
+            <div class="card">
+                <h2>Vocabulary</h2>
+                <div class="sub">Tap 🔊 to hear a word (+2 XP). Star favourites. You can search across everything.</div>
+                <input class="searchbox" id="vocab-search" placeholder="Search...">
+                <div class="catbar" id="vocab-cats"></div>
+                <div class="vocab-grid" id="vocab-grid"></div>
+            </div>
+        </section>
+        <!---Flashcardss-->
+        <section class="panel" id="flash">
+            <div class="card">
+                <h2>Flashcards</h2>
+                <div class="sub">Click to flip. Keys: Space = flip · → got it · ← again · S = speak.</div>
+                <div class="catbar" id="flash-cats"></div>
+                <div class="flash-stage">
+                    <div class="flashcard" id="flashcard">
+                        <div class="inner">
+                            <div class="face front">
+                                <div class="big-word" id="fc-front">—</div>
+                                <div class="hint">click to flip</div>
+                            </div>
+                            <div class="face back">
+                                <div class="big-word" id="fc-back">—</div>
+                                <div class="hint" id="fc-ph"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flash-progress" id="fc-progress">0 / 0</div>
+                    <div class="flash-controls">
+                        <button class="btn sky small" id="fc-say">🔊 Hear</button>
+                        <button class="btn rose small" id="fc-again">😕 Again</button>
+                        <button class="btn sage small" id="fc-got">😄 Got it!</button>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--Quiz-->
+        <section class="panel" id="quiz">
+            <div class="card">
+                <h2>Quiz</h2>
+                <div class="sub">10 questions, both directions. +10 XP per correct answer!</div>
+                <div class="catbar" id="quiz-cats"></div>
+                <div id="quiz-live" style="display:none">
+                    <div class="pbar"><i id="quiz-progress"></i></div>
+                    <div class="quiz-q" id="quiz-question">—</div>
+                    <div class="quiz-opts" id="quiz-options"></div>
+                    <div class="quiz-feedback" id="quiz-feedback"></div>
+                </div>
+                <div id="quiz-start-box"><button class="btn sage" id="quiz-start">▶️ Start quiz</button></div>
+                <div id="quiz-result" style="display:none;text-align:center">
+                    <div style="font-size:3rem" id="quiz-emoji">🎉</div>
+                    <h2 id="quiz-score" style="justify-content:center"></h2>
+
+                    <p class="sub" id="quiz-msg"></p>
+                    <button class="btn sky" id="quiz-retry">🔄 Play again</button>
+
+                </div>
+            </div>
+        </section>
+
+        <!--Match----->
+        <section class="panel" id="match">
+            <div class="card">
+                <h2>🧩 Matching game</h2>
+                <div class="sub">Match each word to its English meaning and clear the board for a massive aware of +25
+                    XP!</div>
+                <div
+                    style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+                    <div>Moves: <b id="match-moves">0</b> · Matched: <b id="match-done">0</b>/6</div>
+                    <button class="btn lav small" id="match-new">🔀 New board</button>
+                </div>
+                <div class="match-grid">
+                    <div class="match-col" id="match-left"></div>
+                    <div class="match-col" id="match-right"></div>
+                </div>
+            </div>
+        </section>
+        <!--Listening function--->
+
+        <section class="panel" id="listen">
+            <div class="card">
+                <h2>Listening/dictation</h2>
+                <div class="sub">Press play, listen, and type what you hear. You get +8 XP when you nail it.</div>
+
+                <div class="catbar" id="listen-cats"></div>
+                <div class="type-stage">
+                    <div class="big-speaker" id="listen-play" title="Play Again">🔊</div>
+                    <div class="reveal" id="listen-reveal">
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!---Spelling function--->
+        <section class="panel" id="spell">
+            <div class="card">
+                <h2>Spell it</h2>
+                <div class="sub">See the English, hear it, and spell the word. +6 XP for a perfect spelling.</div>
+                <div class="type-stage">
+                    <div class="prompt-big" id="spell-prompt">
+                        —
+                    </div>
+
+                    <button class="btn sky small" id="spell-hear">🔊 Hear it</button>
+                    <input class="type-input" id="spell-input" placeholder="spell it here…" autocomplete="off">
+                    <div class="flash-controls">
+                        <button class="btn sage small" id="spell-check">Check</button>
+                        <button class="btn ghost small" id="spell-skip">Reveal</button>
+                        <button class="btn sky small" id="spell-next">Next</button>
+
+                    </div>
+
+                    <div class="reveal" id="spell-reveal"></div>
+                </div>
+            </div>
+        </section>
+        <!--Verbs-->
+        <section class="panel" id="verbs">
+            <div class="card">
+                <h2>Verb conjugation</h2>
+                <div class="sub">Pick a verb and a tense. Tap 🔊 to hear any form.</div>
+                <div class="catbar" id="verb-picker"></div>
+                <div class="catbar" id="tense-picker"></div>
+                <div id="verb-meaning" class="sub" style="margin-top:4px"></div>
+                <table class="conj-table">
+                    <tbody id="conj-body"></tbody>
+                </table>
+                <div class="tense-note" id="tense-note"></div>
+            </div>
+        </section>
+
+        <!---phrases-->
+        <section class="panel" id="phrases">
+            <div class="card">
+                <h2>Phrases that will help you</h2>
+                <div class="sub">Survival language for cafés, streets, and overall making new friends.</div>
+                <div class="catbar" id="phrase-cats"></div>
+                <div id="phrase-list">
+
+                </div>
+            </div>
+        </section>
+
+        <!---numbers-->
+
+        <section class="panel" id="numbers">
+            <div class="card">
+                <h2>Numbers 0–100</h2>
+                <div class="sub">Tap any number to hear it.</div>
+                <div class="num-grid" id="num-grid"></div>
+            </div>
+        </section>
+
+        <!---grammar-->
+        <section class="panel" id="grammar">
+            <div class="card">
+                <h2>Grammar corner</h2>
+                <div class="sub">Short, friendly explanations. Tap a topic to open it.</div>
+                <div id="grammar-list"></div>
+            </div>
+        </section>
+
+        <!---Progress-->
+
+        <section class="panel" id="progress">
+            <div class="card">
+                <h2>Your progress</h2>
+                <div class="sub">All saved in your browser. Keep the streak alive!</div>
+                <div id="prog-bars"></div>
+            </div>
+            <div class="card">
+                <h2>🏅 Achievements</h2>
+                <div class="sub">Little wins to collect as you learn.</div>
+                <div class="badges" id="badges"></div>
+            </div>
+            <div class="card">
+                <h2>⭐ Favourite words ⭐</h2>
+                <div class="sub">The words you starred in this language</div>
+                <div class="vocab-grid" id="fav-grid">
+                </div>
+            </div>
+        </section>
+
+        <!---The settings-->
+        <section class="panel" id="settings">
+            <div class="card">
+                <h2>Settings</h2>
+                <div class="sub">Make it yours. All changes are saved automatically.</div>
+                <div class="setting-row">
+                    <div><b>Language</b>
+                        <div style="font-size:.8rem;color:var(--ink-soft)">French or Spanish</div>
+                    </div>
+                    <select class="set-select" id="set-lang">
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="es">🇪🇸 Español</option>
+                    </select>
+                </div>
+
+
+                <div class="setting-row">
+                    <div><b>Goofy font</b>
+                        <div style="font-size:.8rem;color:var(--ink-soft)">Pick your vibe</div>
+                    </div>
+                    <select class="set-select" id="set-font"></select>
+                </div>
+                <div class="setting-row">
+                    <div><b>Speech speed</b>
+                        <div style="font-size:.8rem;color:var(--ink-soft)">How fast the voice talks</div>
+                    </div>
+                    <input type="range" id="set-rate" min="0.5" max="1.1" step="0.05" value="0.9">
+                </div>
+                <div class="setting-row">
+                    <div><b>Daily XP goal</b>
+                        <div style="font-size:.8rem;color:var(--ink-soft)">Your target per day</div>
+                    </div>
+                    <select class="set-select" id="set-goal">
+                        <option value="30">30 XP (easy)</option>
+                        <option value="50" selected>50 XP (steady)</option>
+                        <option value="100">100 XP (keen)</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <div><b>Test the voice</b>
+                        <div style="font-size:.8rem;color:var(--ink-soft)" id="voice-info">Checking voices…</div>
+                    </div>
+                    <button class="btn sky small" id="set-testvoice">🔊 Say hello</button>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Your Data</h2>
+                <div class="sub">Nothing leaves this device.</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <button class="btn sky small" id="btn-export">Export Progress</button>
+                    <button class="btn ghost small" id="btn-reset">Reset All Data</button>
+                </div>
+            </div>
+        </section>
+
+        <footer>Made with 🥐 &amp; 🌮 and warm colours · Bonjour &amp; Hola! is a tiny offline tutor · Your data stays
+            on your device.</footer>
+    </div>
+
+    <div id="toast"></div>
+    <script>
+        /* ============================================================
+           DATA — everything for both languages lives in DATA[lang]
+           ============================================================ */
+        const DATA = {
+            /* -------------------- FRENCH -------------------- */
+            fr: {
+                name: "French", flagColors: ["#3b6fd4", "#ffffff", "#e94b4b"], code: "fr-FR",
+                hello: { morning: "Bonjour ! ☀️ A fresh French morning", afternoon: "Bon après-midi ! 🌤️ Let's learn a little", evening: "Bonsoir ! 🌙 A cosy evening of French" },
+                testHello: "Bonjour ! Bienvenue.",
+                VOCAB: {
+                    "Greetings 👋": [
+                        ["Bonjour", "Hello / Good morning", "bon-ZHOOR"],
+                        ["Salut", "Hi / Bye (casual)", "sah-LUU"],
+                        ["Bonsoir", "Good evening", "bon-SWAHR"],
+                        ["Au revoir", "Goodbye", "oh ruh-VWAHR"],
+                        ["Merci", "Thank you", "mair-SEE"],
+                        ["S'il vous plaît", "Please", "seel voo PLEH"],
+                        ["Oui", "Yes", "WEE"],
+                        ["Non", "No", "NOHN"],
+                        ["Pardon", "Excuse me / Sorry", "par-DOHN"],
+                        ["Bienvenue", "Welcome", "byan-vuh-NUU"]],
+                    "Food 🍽️": [
+                        ["le pain", "bread", "luh PANH"],
+                        ["le fromage", "cheese", "luh froh-MAHZH"],
+                        ["la pomme", "apple", "lah POM"],
+                        ["l'eau", "water", "LOH"],
+                        ["le café", "coffee", "luh kah-FAY"],
+                        ["le vin", "wine", "luh VANH"],
+                        ["le poulet", "chicken", "luh poo-LEH"],
+                        ["le gâteau", "cake", "luh gah-TOH"],
+                        ["le croissant", "croissant", "luh krwah-SONH"],
+                        ["le lait", "milk", "luh LEH"]],
+                    "Animals 🐾": [
+                        ["le chat", "cat", "luh SHAH"],
+                        ["le chien", "dog", "luh SHYANH"],
+                        ["l'oiseau", "bird", "lwah-ZOH"],
+                        ["le cheval", "horse", "luh shuh-VAL"],
+                        ["la vache", "cow", "lah VASH"],
+                        ["le poisson", "fish", "luh pwah-SOHN"],
+                        ["le lapin", "rabbit", "luh lah-PANH"],
+                        ["la souris", "mouse", "lah soo-REE"],
+                        ["le renard", "fox", "luh ruh-NAHR"],
+                        ["l'ours", "bear", "LOORS"]],
+                    "Colours 🎨": [
+                        ["rouge", "red", "ROOZH"],
+                        ["bleu", "blue", "BLUH"],
+                        ["vert", "green", "VAIR"],
+                        ["jaune", "yellow", "ZHOHN"],
+                        ["orange", "orange", "oh-RONZH"],
+                        ["violet", "purple", "vyoh-LEH"],
+                        ["rose", "pink", "ROHZ"],
+                        ["noir", "black", "NWAHR"],
+                        ["blanc", "white", "BLONH"],
+                        ["gris", "grey", "GREE"]],
+                    "Family 👨‍👩‍👧‍👦": [
+                        ["la mère", "mother", "lah MAIR"],
+                        ["le père", "father", "luh PAIR"],
+                        ["la sœur", "sister", "lah SUHR"],
+                        ["le frère", "brother", "luh FRAIR"],
+                        ["la fille", "daughter / girl", "lah FEEY"],
+                        ["le fils", "son", "luh FEES"],
+                        ["les parents", "parents", "lay pah-RONH"],
+                        ["la grand-mère", "grandmother", "lah gronh-MAIR"],
+                        ["le grand-père", "grandfather", "luh gronh-PAIR"],
+                        ["l'ami", "friend", "lah-MEE"]],
+                    "Travel ✈️": [
+                        ["la gare", "train station", "lah GAR"],
+                        ["l'aéroport", "airport", "lay-roh-PORT"],
+                        ["le bus", "bus", "luh BYOOS"],
+                        ["le taxi", "taxi", "luh TAK-see"],
+                        ["la voiture", "car", "lah vwah-TYOOR"],
+                        ["le vélo", "bicycle", "luh VAY-loh"],
+                        ["le bateau", "boat", "luh bah-TOH"],
+                        ["la rue", "street / road", "lah ROO"],
+                        ["le pont", "bridge", "luh PONH"],
+                        ["la plage", "beach", "lah PLAHZH"]],
+                    "Body 🧍": [
+                        ["la tête", "head", "lah TET"],
+                        ["la main", "hand", "lah MANH"],
+                        ["le pied", "foot", "luh PYAY"],
+                        ["l'œil", "eye", "LUHY"],
+                        ["le nez", "nose", "luh NAY"],
+                        ["la bouche", "mouth", "lah BOOSH"],
+                        ["l'oreille", "ear", "loh-RAY"],
+                        ["le bras", "arm", "luh BRAH"],
+                        ["la jambe", "leg", "lah ZHOMB"],
+                        ["le cœur", "heart", "luh KUHR"]],
+                    "Home 🏠": [
+                        ["la maison", "house", "lah may-ZOHN"],
+                        ["la porte", "door", "lah PORT"],
+                        ["la fenêtre", "window", "lah fuh-NETR"],
+                        ["la table", "table", "lah TAHBL"],
+                        ["la chaise", "chair", "lah SHEZ"],
+                        ["le lit", "bed", "luh LEE"],
+                        ["la cuisine", "kitchen", "lah kwee-ZEEN"],
+                        ["la chambre", "bedroom", "lah SHOMBR"],
+                        ["le jardin", "garden", "luh zhar-DANH"],
+                        ["la clé", "key", "lah KLAY"]],
+                    "Time 🕐": [
+                        ["aujourd'hui", "today", "oh-zhoor-DWEE"],
+                        ["demain", "tomorrow", "duh-MANH"],
+                        ["hier", "yesterday", "ee-AIR"],
+                        ["maintenant", "now", "mant-NONH"],
+                        ["le matin", "morning", "luh mah-TANH"],
+                        ["le soir", "evening", "luh SWAHR"],
+                        ["la nuit", "night", "lah NWEE"],
+                        ["l'heure", "hour / time", "LUHR"],
+                        ["la semaine", "week", "lah suh-MEN"],
+                        ["l'année", "year", "lah-NAY"]],
+                    "Nature 🌳": [
+                        ["le soleil", "sun", "luh soh-LAY"],
+                        ["la lune", "moon", "lah LUUN"],
+                        ["l'arbre", "tree", "LAHRBR"],
+                        ["la fleur", "flower", "lah FLUHR"],
+                        ["la mer", "sea", "lah MAIR"],
+                        ["la montagne", "mountain", "lah mon-TAHN-yuh"],
+                        ["la pluie", "rain", "lah PLWEE"],
+                        ["le vent", "wind", "luh VONH"],
+                        ["la neige", "snow", "lah NEZH"],
+                        ["le ciel", "sky", "luh SYEL"]],
+                    "Clothing 👕": [
+                        ["la chemise", "shirt", "lah shuh-MEEZ"],
+                        ["le pantalon", "trousers", "luh pon-tah-LONH"],
+                        ["la robe", "dress", "lah ROHB"],
+                        ["les chaussures", "shoes", "lay shoh-SUUR"],
+                        ["le manteau", "coat", "luh mon-TOH"],
+                        ["le chapeau", "hat", "luh shah-POH"],
+                        ["les chaussettes", "socks", "lay shoh-SET"],
+                        ["la jupe", "skirt", "lah ZHUUP"],
+                        ["le pull", "sweater", "luh PUUL"],
+                        ["les gants", "gloves", "lay GONH"]],
+                    "Weather 🌦️": [
+                        ["il fait beau", "it's nice out", "eel feh BOH"],
+                        ["il pleut", "it's raining", "eel PLUH"],
+                        ["il neige", "it's snowing", "eel NEZH"],
+                        ["le nuage", "cloud", "luh nuu-AHZH"],
+                        ["l'orage", "storm", "loh-RAHZH"],
+                        ["le froid", "cold", "luh FRWAH"],
+                        ["la chaleur", "heat", "lah shah-LUHR"],
+                        ["le brouillard", "fog", "luh broo-YAR"],
+                        ["l'arc-en-ciel", "rainbow", "lark-on-SYEL"],
+                        ["le temps", "weather", "luh TONH"]],
+                },
+                PHRASES: {
+                    "Basics": [
+                        ["Comment ça va ?", "How are you?"],
+                        ["Ça va bien, merci !", "I'm good, thanks!"],
+                        ["Comment tu t'appelles ?", "What's your name?"],
+                        ["Je m'appelle…", "My name is…"],
+                        ["Enchanté !", "Nice to meet you!"],
+                        ["Je ne comprends pas.", "I don't understand."],
+                        ["Parlez-vous anglais ?", "Do you speak English?"]],
+                    "Café ☕": [
+                        ["Un café, s'il vous plaît.", "A coffee, please."],
+                        ["L'addition, s'il vous plaît.", "The bill, please."],
+                        ["Je voudrais un croissant.", "I'd like a croissant."],
+                        ["C'est délicieux !", "It's delicious!"],
+                        ["Sans sucre, merci.", "No sugar, thanks."]],
+                    "Directions 🧭": [
+                        ["Où sont les toilettes ?", "Where's the bathroom?"],
+                        ["Où est la gare ?", "Where's the station?"],
+                        ["C'est combien ?", "How much is it?"],
+                        ["À gauche / À droite", "Left / Right"],
+                        ["Tout droit", "Straight ahead"]],
+                    "Feelings 💛": [
+                        ["J'ai faim.", "I'm hungry."],
+                        ["J'ai soif.", "I'm thirsty."],
+                        ["Je suis fatigué.", "I'm tired."],
+                        ["Je suis content.", "I'm happy."],
+                        ["Je t'aime.", "I love you."]],
+                },
+
+
+
+
+                VERBS: {
+
+
+                    "être": {
+                        meaning: "to be", tenses: {
+                            "Présent": [["je", "suis"], ["tu", "es"], ["il/elle", "est"], ["nous", "sommes"], ["vous", "êtes"], ["ils/elles", "sont"]],
+                            "Passé composé": [["j'", "ai été"], ["tu", "as été"], ["il/elle", "a été"], ["nous", "avons été"], ["vous", "avez été"], ["ils/elles", "ont été"]],
+
+
+                            "Futur proche": [["je", "vais être"], ["tu", "vas être"], ["il/elle", "va être"], ["nous", "allons être"], ["vous", "allez être"], ["ils/elles", "vont être"]]
+                        }
+                    },
+                    "avoir": {
+                        meaning: "to have", tenses: {
+                            "Présent": [["j'", "ai"], ["tu", "as"], ["il/elle", "a"], ["nous", "avons"], ["vous", "avez"], ["ils/elles", "ont"]],
+                            "Passé composé": [["j'", "ai eu"], ["tu", "as eu"], ["il/elle", "a eu"], ["nous", "avons eu"], ["vous", "avez eu"], ["ils/elles", "ont eu"]],
+                            "Futur proche": [["je", "vais avoir"], ["tu", "vas avoir"], ["il/elle", "va avoir"], ["nous", "allons avoir"], ["vous", "allez avoir"], ["ils/elles", "vont avoir"]]
+                        }
+                    },
+                    "aller": {
+                        meaning: "to go", tenses: {
+                            "Présent": [["je", "vais"], ["tu", "vas"], ["il/elle", "va"], ["nous", "allons"], ["vous", "allez"], ["ils/elles", "vont"]],
+                            "Passé composé": [["je", "suis allé(e)"], ["tu", "es allé(e)"], ["il/elle", "est allé(e)"], ["nous", "sommes allé(e)s"], ["vous", "êtes allé(e)s"], ["ils/elles", "sont allé(e)s"]],
+                            "Futur proche": [["je", "vais aller"], ["tu", "vas aller"], ["il/elle", "va aller"], ["nous", "allons aller"], ["vous", "allez aller"], ["ils/elles", "vont aller"]]
+                        }
+                    },
+                    "faire": {
+                        meaning: "to do / make", tenses: {
+                            "Présent": [["je", "fais"], ["tu", "fais"], ["il/elle", "fait"], ["nous", "faisons"], ["vous", "faites"], ["ils/elles", "font"]],
+                            "Passé composé": [["j'", "ai fait"], ["tu", "as fait"], ["il/elle", "a fait"], ["nous", "avons fait"], ["vous", "avez fait"], ["ils/elles", "ont fait"]],
+                            "Futur proche": [["je", "vais faire"], ["tu", "vas faire"], ["il/elle", "va faire"], ["nous", "allons faire"], ["vous", "allez faire"], ["ils/elles", "vont faire"]]
+                        }
+                    },
+                    "parler": {
+                        meaning: "to speak", tenses: {
+                            "Présent": [["je", "parle"], ["tu", "parles"], ["il/elle", "parle"], ["nous", "parlons"], ["vous", "parlez"], ["ils/elles", "parlent"]],
+                            "Passé composé": [["j'", "ai parlé"], ["tu", "as parlé"], ["il/elle", "a parlé"], ["nous", "avons parlé"], ["vous", "avez parlé"], ["ils/elles", "ont parlé"]],
+                            "Futur proche": [["je", "vais parler"], ["tu", "vas parler"], ["il/elle", "va parler"], ["nous", "allons parler"], ["vous", "allez parler"], ["ils/elles", "vont parler"]]
+                        }
+                    },
+                    "manger": {
+                        meaning: "to eat", tenses: {
+                            "Présent": [["je", "mange"], ["tu", "manges"], ["il/elle", "mange"], ["nous", "mangeons"], ["vous", "mangez"], ["ils/elles", "mangent"]],
+                            "Passé composé": [["j'", "ai mangé"], ["tu", "as mangé"], ["il/elle", "a mangé"], ["nous", "avons mangé"], ["vous", "avez mangé"], ["ils/elles", "ont mangé"]],
+                            "Futur proche": [["je", "vais manger"], ["tu", "vas manger"], ["il/elle", "va manger"], ["nous", "allons manger"], ["vous", "allez manger"], ["ils/elles", "vont manger"]]
+                        }
+                    },
+                },
+
+
+
+                TENSE_NOTES: {
+                    "Présent": "Le présent — what happens now or usually. Your most-used tense.",
+                    "Passé composé": "Everyday past — 'I did / have done'. Uses avoir or être + a past participle.",
+                    "Futur proche": "'Going to…' — just use aller + an infinitive. Easy!"
+                },
+
+
+                NUMBERS: [[0, "zéro"], [1, "un"], [2, "deux"], [3, "trois"], [4, "quatre"], [5, "cinq"], [6, "six"], [7, "sept"], [8, "huit"], [9, "neuf"], [10, "dix"], [11, "onze"], [12, "douze"], [13, "treize"], [14, "quatorze"], [15, "quinze"], [16, "seize"], [17, "dix-sept"], [18, "dix-huit"], [19, "dix-neuf"], [20, "vingt"], [21, "vingt et un"], [22, "vingt-deux"], [30, "trente"], [40, "quarante"], [50, "cinquante"], [60, "soixante"], [70, "soixante-dix"], [80, "quatre-vingts"], [90, "quatre-vingt-dix"], [100, "cent"]],
+
+                GRAMMAR: [
+                    ["🚻 le, la, les — gender & articles", "French nouns are masculine or feminine, and 'the' matches:<ul><li><b>le</b> = the (masc): <i>le chat</i></li><li><b>la</b> = the (fem): <i>la maison</i></li><li><b>l'</b> before a vowel: <i>l'ami, l'eau</i></li><li><b>les</b> = the (plural): <i>les chats</i></li></ul>Always learn a noun <b>with</b> its article."],
+                    ["🔢 Making things plural", "Most nouns add a silent <b>-s</b>: <i>un livre → des livres</i>. Words ending in -eau add -x: <i>gâteau → gâteaux</i>. 'the' → <b>les</b>, 'a' → <b>des</b>."],
+                    ["🙅 Saying 'not'", "Wrap the verb in <b>ne … pas</b>: <i>Je <b>ne</b> parle <b>pas</b> français.</i> Before a vowel, ne → n': <i>Il <b>n'</b>est <b>pas</b> là.</i>"],
+                    ["❓ Asking questions", "Three easy ways: raise your voice (<i>Tu parles ?</i>), add <b>est-ce que</b>, or use question words: qui, quoi, où, quand, pourquoi, comment, combien."],
+                    ["🎨 Adjectives agree", "Adjectives match the noun: <i>un pull <b>vert</b></i> / <i>une robe <b>verte</b></i>. Most come <b>after</b> the noun: <i>une voiture rouge</i>."],
+                    ["💛 tu vs vous", "<b>tu</b> = one person you know well. <b>vous</b> = someone older, a stranger, or a group. Are you unsure? Use <b>vous</b>."]],
+            },
+            /* -------------------- SPANISH -------------------- */
+            es: {
+                name: "Spanish", flagColors: ["#e94b4b", "#ffcf5c", "#e94b4b"], code: "es-ES",
+                hello: { morning: "¡Buenos días! ☀️ A fresh Spanish morning", afternoon: "¡Buenas tardes! 🌤️ Let's learn a little", evening: "¡Buenas noches! 🌙 A cosy evening of Spanish" },
+                testHello: "¡Hola! Bienvenido.",
+                VOCAB: {
+                    "Greetings 👋": [
+                        ["Hola", "Hello", "OH-lah"],
+                        ["Buenos días", "Good morning", "BWEH-nos DEE-as"],
+                        ["Buenas noches", "Good night", "BWEH-nas NOH-ches"],
+                        ["Adiós", "Goodbye", "ah-DYOHS"],
+                        ["Gracias", "Thank you", "GRAH-syas"],
+                        ["Por favor", "Please", "por fah-VOR"],
+                        ["Sí", "Yes", "SEE"],
+                        ["No", "No", "NOH"],
+                        ["Perdón", "Excuse me / Sorry", "per-DOHN"],
+                        ["Bienvenido", "Welcome", "byen-veh-NEE-doh"]],
+                    "Food 🍽️": [
+                        ["el pan", "bread", "el PAHN"],
+                        ["el queso", "cheese", "el KEH-soh"],
+                        ["la manzana", "apple", "lah man-SAH-nah"],
+                        ["el agua", "water", "el AH-gwah"],
+                        ["el café", "coffee", "el kah-FEH"],
+                        ["el vino", "wine", "el BEE-noh"],
+                        ["el pollo", "chicken", "el POH-yoh"],
+                        ["el pastel", "cake", "el pas-TEL"],
+                        ["la leche", "milk", "lah LEH-cheh"],
+                        ["el arroz", "rice", "el ah-ROHS"]],
+                    "Animals 🐾": [
+                        ["el gato", "cat", "el GAH-toh"],
+                        ["el perro", "dog", "el PEH-roh"],
+                        ["el pájaro", "bird", "el PAH-hah-roh"],
+                        ["el caballo", "horse", "el kah-BAH-yoh"],
+                        ["la vaca", "cow", "lah BAH-kah"],
+                        ["el pez", "fish", "el PES"],
+                        ["el conejo", "rabbit", "el koh-NEH-hoh"],
+                        ["el ratón", "mouse", "el rah-TOHN"],
+                        ["el zorro", "fox", "el SOH-roh"],
+                        ["el oso", "bear", "el OH-soh"]],
+                    "Colours 🎨": [
+                        ["rojo", "red", "ROH-hoh"],
+                        ["azul", "blue", "ah-SOOL"],
+                        ["verde", "green", "BER-deh"],
+                        ["amarillo", "yellow", "ah-mah-REE-yoh"],
+                        ["naranja", "orange", "nah-RAHN-hah"],
+                        ["morado", "purple", "moh-RAH-doh"],
+                        ["rosa", "pink", "ROH-sah"],
+                        ["negro", "black", "NEH-groh"],
+                        ["blanco", "white", "BLAHN-koh"],
+                        ["gris", "grey", "GREES"]],
+                    "Family 👨‍👩‍👧": [
+                        ["la madre", "mother", "lah MAH-dreh"],
+                        ["el padre", "father", "el PAH-dreh"],
+                        ["la hermana", "sister", "lah er-MAH-nah"],
+                        ["el hermano", "brother", "el er-MAH-noh"],
+                        ["la hija", "daughter", "lah EE-hah"],
+                        ["el hijo", "son", "el EE-hoh"],
+                        ["los padres", "parents", "los PAH-dres"],
+                        ["la abuela", "grandmother", "lah ah-BWEH-lah"],
+                        ["el abuelo", "grandfather", "el ah-BWEH-loh"],
+                        ["el amigo", "friend", "el ah-MEE-goh"]],
+                    "Travel ✈️": [
+                        ["la estación", "station", "lah es-tah-SYOHN"],
+                        ["el aeropuerto", "airport", "el ah-eh-roh-PWER-toh"],
+                        ["el hotel", "hotel", "el oh-TEL"],
+                        ["la calle", "street", "lah KAH-yeh"],
+                        ["el coche", "car", "el KOH-cheh"],
+                        ["el tren", "train", "el TREN"],
+                        ["el billete", "ticket", "el bee-YEH-teh"],
+                        ["el mapa", "map", "el MAH-pah"],
+                        ["la playa", "beach", "lah PLAH-yah"],
+                        ["la ciudad", "city", "lah syoo-DAHD"]],
+                    "Body 🧍": [
+                        ["la cabeza", "head", "lah kah-BEH-sah"],
+                        ["la mano", "hand", "lah MAH-noh"],
+                        ["el pie", "foot", "el PYEH"],
+                        ["el ojo", "eye", "el OH-hoh"],
+                        ["la nariz", "nose", "lah nah-REES"],
+                        ["la boca", "mouth", "lah BOH-kah"],
+                        ["la oreja", "ear", "lah oh-REH-hah"],
+                        ["el brazo", "arm", "el BRAH-soh"],
+                        ["la pierna", "leg", "lah PYER-nah"],
+                        ["el corazón", "heart", "el koh-rah-SOHN"]],
+                    "Home 🏠": [
+                        ["la casa", "house", "lah KAH-sah"],
+                        ["la puerta", "door", "lah PWER-tah"],
+                        ["la ventana", "window", "lah ben-TAH-nah"],
+                        ["la mesa", "table", "lah MEH-sah"],
+                        ["la silla", "chair", "lah SEE-yah"],
+                        ["la cama", "bed", "lah KAH-mah"],
+                        ["la cocina", "kitchen", "lah koh-SEE-nah"],
+                        ["el dormitorio", "bedroom", "el dor-mee-TOH-ryoh"],
+                        ["el jardín", "garden", "el har-DEEN"],
+                        ["la llave", "key", "lah YAH-veh"]],
+                    "Time 🕐": [
+                        ["hoy", "today", "OY"],
+                        ["mañana", "tomorrow", "mah-NYAH-nah"],
+                        ["ayer", "yesterday", "ah-YER"],
+                        ["ahora", "now", "ah-OH-rah"],
+                        ["la mañana", "morning", "lah mah-NYAH-nah"],
+                        ["la tarde", "afternoon", "lah TAR-deh"],
+                        ["la noche", "night", "lah NOH-cheh"],
+                        ["la hora", "hour", "lah OH-rah"],
+                        ["la semana", "week", "lah seh-MAH-nah"],
+                        ["el año", "year", "el AH-nyoh"]],
+                    "Nature 🌳": [
+                        ["el sol", "sun", "el SOL"],
+                        ["la luna", "moon", "lah LOO-nah"],
+                        ["el árbol", "tree", "el AR-bol"],
+                        ["la flor", "flower", "lah FLOR"],
+                        ["el mar", "sea", "el MAR"],
+                        ["la montaña", "mountain", "lah mon-TAH-nyah"],
+                        ["la lluvia", "rain", "lah YOO-byah"],
+                        ["el viento", "wind", "el BYEN-toh"],
+                        ["la nieve", "snow", "lah NYEH-beh"],
+                        ["el cielo", "sky", "el SYEH-loh"]],
+                    "Clothing 👕": [
+                        ["la camisa", "shirt", "lah kah-MEE-sah"],
+                        ["los pantalones", "trousers", "los pan-tah-LOH-nes"],
+                        ["el vestido", "dress", "el bes-TEE-doh"],
+                        ["los zapatos", "shoes", "los sah-PAH-tos"],
+                        ["el abrigo", "coat", "el ah-BREE-goh"],
+                        ["el sombrero", "hat", "el som-BREH-roh"],
+                        ["los calcetines", "socks", "los kal-seh-TEE-nes"],
+                        ["la falda", "skirt", "lah FAL-dah"],
+                        ["el suéter", "sweater", "el SWEH-ter"],
+                        ["los guantes", "gloves", "los GWAN-tes"]],
+                    "Weather 🌦️": [
+                        ["hace sol", "it's sunny", "AH-seh SOL"],
+                        ["llueve", "it's raining", "YWEH-beh"],
+                        ["nieva", "it's snowing", "NYEH-bah"],
+                        ["la nube", "cloud", "lah NOO-beh"],
+                        ["la tormenta", "storm", "lah tor-MEN-tah"],
+                        ["el frío", "cold", "el FREE-oh"],
+                        ["el calor", "heat", "el kah-LOR"],
+                        ["la niebla", "fog", "lah NYEH-blah"],
+                        ["el arcoíris", "rainbow", "el ar-koh-EE-rees"],
+                        ["el tiempo", "weather", "el TYEM-poh"]],
+                },
+                PHRASES: {
+                    "Basics": [
+                        ["¿Cómo estás?", "How are you?"],
+                        ["Estoy bien, gracias.", "I'm good, thanks."],
+                        ["¿Cómo te llamas?", "What's your name?"],
+                        ["Me llamo…", "My name is…"],
+                        ["¡Mucho gusto!", "Nice to meet you!"],
+                        ["No entiendo.", "I don't understand."],
+                        ["¿Hablas inglés?", "Do you speak English?"]],
+                    "Café ☕": [
+                        ["Un café, por favor.", "A coffee, please."],
+                        ["La cuenta, por favor.", "The bill, please."],
+                        ["Quisiera un pastel.", "I'd like a cake."],
+                        ["¡Está delicioso!", "It's delicious!"],
+                        ["Sin azúcar, gracias.", "No sugar, thanks."]],
+                    "Directions 🧭": [
+                        ["¿Dónde está el baño?", "Where's the bathroom?"],
+                        ["¿Dónde está la estación?", "Where's the station?"],
+                        ["¿Cuánto cuesta?", "How much is it?"],
+                        ["A la izquierda / A la derecha", "Left / Right"],
+                        ["Todo recto", "Straight ahead"]],
+                    "Feelings 💛": [
+                        ["Tengo hambre.", "I'm hungry."],
+                        ["Tengo sed.", "I'm thirsty."],
+                        ["Estoy cansado.", "I'm tired."],
+                        ["Estoy contento.", "I'm happy."],
+                        ["Te quiero.", "I love you."]],
+                },
+                VERBS: {
+                    "ser": {
+                        meaning: "to be (permanent)", tenses: {
+                            "Presente": [["yo", "soy"], ["tú", "eres"], ["él/ella", "es"], ["nosotros", "somos"], ["vosotros", "sois"], ["ellos/ellas", "son"]],
+                            "Pretérito": [["yo", "fui"], ["tú", "fuiste"], ["él/ella", "fue"], ["nosotros", "fuimos"], ["vosotros", "fuisteis"], ["ellos/ellas", "fueron"]],
+                            "Futuro próximo": [["yo", "voy a ser"], ["tú", "vas a ser"], ["él/ella", "va a ser"], ["nosotros", "vamos a ser"], ["vosotros", "vais a ser"], ["ellos/ellas", "van a ser"]]
+                        }
+                    },
+                    "estar": {
+                        meaning: "to be (state/place)", tenses: {
+                            "Presente": [["yo", "estoy"], ["tú", "estás"], ["él/ella", "está"], ["nosotros", "estamos"], ["vosotros", "estáis"], ["ellos/ellas", "están"]],
+                            "Pretérito": [["yo", "estuve"], ["tú", "estuviste"], ["él/ella", "estuvo"], ["nosotros", "estuvimos"], ["vosotros", "estuvisteis"], ["ellos/ellas", "estuvieron"]],
+                            "Futuro próximo": [["yo", "voy a estar"], ["tú", "vas a estar"], ["él/ella", "va a estar"], ["nosotros", "vamos a estar"], ["vosotros", "vais a estar"], ["ellos/ellas", "van a estar"]]
+                        }
+                    },
+                    "tener": {
+                        meaning: "to have", tenses: {
+                            "Presente": [["yo", "tengo"], ["tú", "tienes"], ["él/ella", "tiene"], ["nosotros", "tenemos"], ["vosotros", "tenéis"], ["ellos/ellas", "tienen"]],
+                            "Pretérito": [["yo", "tuve"], ["tú", "tuviste"], ["él/ella", "tuvo"], ["nosotros", "tuvimos"], ["vosotros", "tuvisteis"], ["ellos/ellas", "tuvieron"]],
+                            "Futuro próximo": [["yo", "voy a tener"], ["tú", "vas a tener"], ["él/ella", "va a tener"], ["nosotros", "vamos a tener"], ["vosotros", "vais a tener"], ["ellos/ellas", "van a tener"]]
+                        }
+                    },
+                    "ir": {
+                        meaning: "to go", tenses: {
+                            "Presente": [["yo", "voy"], ["tú", "vas"], ["él/ella", "va"], ["nosotros", "vamos"], ["vosotros", "vais"], ["ellos/ellas", "van"]],
+                            "Pretérito": [["yo", "fui"], ["tú", "fuiste"], ["él/ella", "fue"], ["nosotros", "fuimos"], ["vosotros", "fuisteis"], ["ellos/ellas", "fueron"]],
+                            "Futuro próximo": [["yo", "voy a ir"], ["tú", "vas a ir"], ["él/ella", "va a ir"], ["nosotros", "vamos a ir"], ["vosotros", "vais a ir"], ["ellos/ellas", "van a ir"]]
+                        }
+                    },
+                    "hablar": {
+                        meaning: "to speak", tenses: {
+                            "Presente": [["yo", "hablo"], ["tú", "hablas"], ["él/ella", "habla"], ["nosotros", "hablamos"], ["vosotros", "habláis"], ["ellos/ellas", "hablan"]],
+                            "Pretérito": [["yo", "hablé"], ["tú", "hablaste"], ["él/ella", "habló"], ["nosotros", "hablamos"], ["vosotros", "hablasteis"], ["ellos/ellas", "hablaron"]],
+                            "Futuro próximo": [["yo", "voy a hablar"], ["tú", "vas a hablar"], ["él/ella", "va a hablar"], ["nosotros", "vamos a hablar"], ["vosotros", "vais a hablar"], ["ellos/ellas", "van a hablar"]]
+                        }
+                    },
+                    "comer": {
+                        meaning: "to eat", tenses: {
+                            "Presente": [["yo", "como"], ["tú", "comes"], ["él/ella", "come"], ["nosotros", "comemos"], ["vosotros", "coméis"], ["ellos/ellas", "comen"]],
+                            "Pretérito": [["yo", "comí"], ["tú", "comiste"], ["él/ella", "comió"], ["nosotros", "comimos"], ["vosotros", "comisteis"], ["ellos/ellas", "comieron"]],
+                            "Futuro próximo": [["yo", "voy a comer"], ["tú", "vas a comer"], ["él/ella", "va a comer"], ["nosotros", "vamos a comer"], ["vosotros", "vais a comer"], ["ellos/ellas", "van a comer"]]
+                        }
+                    },
+                },
+                TENSE_NOTES: {
+                    "Presente": "El presente — what happens now or usually. Your most-used tense.",
+                    "Pretérito": "The simple past — 'I did'. Very common in speech and stories.",
+                    "Futuro próximo": "'Going to…' — just use ir a + an infinitive. Easy!"
+                },
+                NUMBERS: [[0, "cero"], [1, "uno"], [2, "dos"], [3, "tres"], [4, "cuatro"], [5, "cinco"], [6, "seis"], [7, "siete"], [8, "ocho"], [9, "nueve"], [10, "diez"], [11, "once"], [12, "doce"], [13, "trece"], [14, "catorce"], [15, "quince"], [16, "dieciséis"], [17, "diecisiete"], [18, "dieciocho"], [19, "diecinueve"], [20, "veinte"], [21, "veintiuno"], [22, "veintidós"], [30, "treinta"], [40, "cuarenta"], [50, "cincuenta"], [60, "sesenta"], [70, "setenta"], [80, "ochenta"], [90, "noventa"], [100, "cien"]],
+                GRAMMAR: [
+                    ["🚻 el, la, los, las — gender & articles", "Spanish nouns are masculine or feminine:<ul><li><b>el</b> = the (masc): <i>el gato</i></li><li><b>la</b> = the (fem): <i>la casa</i></li><li><b>los / las</b> = the (plural)</li><li><b>un / una</b> = a</li></ul>Learn each noun <b>with</b> its article."],
+                    ["🔢 Making things plural", "Add <b>-s</b> after a vowel (<i>gato → gatos</i>) or <b>-es</b> after a consonant (<i>flor → flores</i>). Articles become los/las, unos/unas."],
+                    ["🙅 Saying 'no'", "Just put <b>no</b> before the verb: <i>No hablo español.</i> Double negatives are normal: <i>No tengo nada.</i> (I don't have anything.)"],
+                    ["❓ Asking questions", "Wrap questions in <b>¿ … ?</b> with the upside-down opener. Question words: qué, quién, dónde, cuándo, por qué, cómo, cuánto."],
+                    ["🎨 Adjectives agree & follow", "Adjectives match gender & number: <i>gato negro</i>, <i>casa negra</i>, <i>gatos negros</i>. Most come <b>after</b> the noun."],
+                    ["💛 tú vs usted", "<b>tú</b> = informal 'you'. <b>usted</b> = formal/respectful. In Spain, <b>vosotros</b> = 'you all' (informal); <b>ustedes</b> is formal/plural."]],
+            },
+        };
+
+
+
+        /* ============================================================
+       STATE
+       ============================================================ */
+
+        const SKEY = "bonjour_hola_v1";
+        const FONTS = {
+            "Comic Sans": '"Comic Sans MS","Comic Sans","Chalkboard SE","Comic Neue",cursive',
+            "Chalkboard": '"Chalkboard SE","Comic Sans MS",cursive',
+            "Marker": '"Marker Felt","Comic Sans MS",fantasy,cursive',
+            "Handwriting": '"Bradley Hand","Segoe Print","Comic Sans MS",cursive',
+            "Rounded": '"Baloo 2","Verdana Rounded","Comic Sans MS",system-ui,sans-serif',
+            "Plain (readable)": '"Segoe UI",system-ui,-apple-system,sans-serif'
+        };
+
+        const defaultState = {
+            lang: "fr", font: "Comic Sans", xp: 0, streak: 0, lastVisit: null,
+            learned: { fr: {}, es: {} }, favourites: { fr: {}, es: {} },
+            quizBest: 0, gamesPlayed: 0, dictationRight: 0, spellRight: 0, matchWins: 0,
+            dailyDate: null, dailyXP: 0, dailyGoal: 50, rate: 0.9, achievements: {}, quizPerfect: false
+        };
+        let state = load();
+        function load() {
+            try {
+                const s = Object.assign({}, defaultState, JSON.parse(localStorage.getItem(SKEY)) || {});
+
+                s.learned = Object.assign({ fr: {}, es: {} }, s.learned); s.favourites = Object.assign({ fr: {}, es: {} }, s.favourites); return s;
+            }
+
+
+
+
+            catch (e) { return JSON.parse(JSON.stringify(defaultState)); }
+        } function save() { localStorage.setItem(SKEY, JSON.stringify(state)); }
+
+        /* streak and the daily xp reset function */
+
+        (function () {
+            const today = new Date().toDateString();
+            if (state.lastVisit !== today) {
+                const yest = new Date(Date.now() - 864e5).toDateString();
+                state.streak = (state.lastVisit === yest) ? state.streak + 1 : 1; state.lastVisit = today;
+            }
+            if (state.dailyDate !== today) { state.dailyDate = today; state.dailyXP = 0; } save();
+        })();
+
+        /* ==
+        Helpers
+        === */
+        const $ = (s, r = document) => r.querySelector(s);
+        const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+        const L = () => DATA[state.lang];
+        const levelFor = xp => Math.floor(xp / 100) + 1;
+        function learnedMap() { if (!state.learned[state.lang]) state.learned[state.lang] = {}; return state.learned[state.lang]; }
+        function favMap() { if (!state.favourites[state.lang]) state.favourites[state.lang] = {}; return state.favourites[state.lang]; }
+        const totalLearned = () => Object.keys(state.learned.fr || {}).length + Object.keys(state.learned.es || {}).length;
+        const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0;[a[i], a[j]] = [a[j], a[i]]; } return a; };
+        const fold = s => s.toLowerCase().trim().replace(/[.,!?;:¿¡]/g, "").replace(/\s+/g, " ");
+        const stripAccents = s => fold(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        function addXP(n) {
+            const before = levelFor(state.xp); state.xp += n; state.dailyXP += n; save(); renderStats(); renderGoal();
+            if (levelFor(state.xp) > before) { confetti(); toast("🎖️ Level up! You're level " + levelFor(state.xp)); } checkAchievements();
+        }
+        function markLearned(w) { if (!learnedMap()[w]) { learnedMap()[w] = true; save(); renderStats(); checkAchievemnts(); } }
+        function renderStats() {
+            $("#s-lvl").textContent = levelFor(state.xp); $("#s-streak").textContent = state.streak;
+            $("#s-xp").textContent = state.xp; $("#s-words").textContent = Object.keys(learnedMap()).length;
+            $("#lvl-bar").style.width = (state.xp % 100) + "%";
+        }
+        function renderGoal() {
+            const g = state.dailyGoal || 50, pct = Math.min(100, Math.round(state.dailyXP / g * 100));
+
+            $("#goal-num").textContent = state.dailyXP; $("#goal-max").textContent = g;
+
+            $("#goal-ring").style.setProperty("--deg", (pct * 3.6) + "deg");
+            $("#goal-msg").textContent = pct >= 100 ? "YESSIR Goal smashed! Bravo / ¡Bravo!" : (pct >= 50 ? "You're halfway there. Keep on going dude!" : "Let's earn some XP today");
+        }
+
+
+
+
+        let toastTimer; function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1900); }
+
+
+
+
+        /* speechh */
+
+        let voices = [];
+        function pickVoice() {
+            voices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
+
+            const info = $("#voice-info"); if (info) { const v = voiceFor(L().code); info.textContent = v ? ("Using: " + v.name) : ("No " + L().name + " voice found — will still try."); }
+        }
+        function voiceFor(code) {
+            const c = code.toLowerCase();
+            return
+            voices.find(x => x.lang && x.lang.toLowerCase() === c) || voices.find(x => x.lang && x.lang.toLowerCase().startsWith(c.slice(0, 2))) || null;
+        }
+        if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+        function speak(t) {
+            if (!('speechSynthesis' in window)) { toast("🔇 Speech not supported here"); return; }
+            speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = L().code; u.rate = state.rate; u.pitch = 1;
+            const
+
+                v = voiceFor(L().code); if (v) u.voice = v; speechSynthesis.speak(u);
+        }
+
+        /*CONFETTIII*/
+
+        function confetti() {
+            const cols = ["#ffcf5c", "#ff9a9a", "#7fb7f0", "#86c79a", "#ffb877", "#b39df0"];
+            for (let i = 0; i < 44; i++) {
+                const c = document.createElement("div"); c.className = "confetti"; c.style.left = Math.random() * 100 + "vw";
+
+                c.style.background = cols[i % cols.length]; c.style.transform = `rotate(${Math.random() * 360}deg)`; document.body.appendChild(c);
+
+
+                c.animate([{ transform: "translateY(0) rotate(0)", opacity: 1 }, { transform: `translateY(105vh) rotate(${540 + Math.random() * 360}deg)`, opacity: .9 }],
+                    { duration: 1400 + Math.random() * 1200, easing: "cubic-bezier(.3,.7,.4,1)" }).onfinish = () => c.remove();
+            }
+        }
+
+        /* ============================================================
+      TABS and the LANGUAGEs
+      ============================================================ */
+
+        $$(".tab").forEach(t => t.addEventListener("click", () => {
+            $$(".tab").forEach(x => x.classList.remove("active")); t.classList.add("active");
+
+
+            $$(".panel").forEach(p => p.classList.remove("show")); $('#' + t.dataset.tab).classList.add("show");
+
+            if (t.dataset.tab === "progress") renderProgress(); window.scrollTo({ top: 0, behavior: "smooth" });
+        }));
+
+        const goTab = n => $(`.tab[data-tab="${n}"]`).click();
+
+        $$(".langbtn").forEach(b => b.onclick = () => setLang(b.dataset.lang));
+        function setLang(l) {
+            state.lang = l; save();
+            $$(".langbtn").forEach(x => x.classList.toggle("active", x.dataset.lang === l));
+            $("#set-lang").value = l;
+            resetSelections(); pickVoice(); renderAll();
+            toast(l === "fr" ? "On parle français ! 🇫🇷" : "¡Hablamos español! 🇪🇸");
+        }
+        /* current-selection state that depends on the languages thats basically chosen like spanish or french */
+    
