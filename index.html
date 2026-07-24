@@ -2211,3 +2211,26 @@
         });
 
         /* == FLASHCARDS logic etc */
+        let deck = [], fi = 0;
+        function renderFlashCats() {
+            const box = $("#flash-cats"); box.innerHTML = "";
+            Object.keys(L().VOCAB).forEach(c => {
+                const b = document.createElement("button"); b.className = "chip" + (c === fCat ? " active" : ""); b.textContent = c;
+                b.onclick = () => { fCat = c; buildDeck(); renderFlashCats(); }; box.appendChild(b);
+            });
+        }
+        function buildDeck() { deck = shuffle(L().VOCAB[fCat]); fi = 0; showFlash(); }
+        function showFlash() {
+            const c = $("#flashcard"); c.classList.remove("flipped"); const w = deck[fi];
+            $("#fc-front").textContent = w[0]; $("#fc-back").textContent = w[1]; $("#fc-ph").textContent = "/ " + w[2] + " /";
+            $("#fc-progress").textContent = `${fi + 1} / ${deck.length}`;
+        }
+        $("#flashcard").onclick = () => $("#flashcard").classList.toggle("flipped");
+
+
+        $("#fc-say").onclick = () => { const w = deck[fi]; speak(w[0]); markLearned(w[0]); };
+
+        $("#fc-again").onclick = () => nextFlash();
+        $("#fc-got").onclick = () => { markLearned(deck[fi][0]); addXP(3); toast("😄 +3 XP"); nextFlash(); };
+
+        function nextFlash() { fi++; if (fi >= deck.length) { confetti(); toast("🎉 Deck complete!"); fi = 0; deck = shuffle(deck); } showFlash(); }
