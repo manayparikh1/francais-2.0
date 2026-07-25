@@ -2483,4 +2483,62 @@
         }
 
         /*Progress logic*/
-    
+
+        function renderProgress() {
+            const box = $("#prog-bars"); box.innerHTML = "";
+            const total = Object.values(L().VOCAB).flat().length;
+            const learned = Object.values(L().VOCAB).flat().filter(w => learnedMap()[w[0]]).length;
+            const got = Object.values(state.achievements).filter(Boolean).length;
+
+            const rows = [[`📚 ${L().name} words learned`, learned, total, "var(--sage-deep)"], ["⭐ XP earned", state.xp, 1000, "var(--sky-deep)"],
+            ["🔥 Day streak", state.streak, 7, "var(--peach-deep)"], ["🎮 Games played", state.gamesPlayed, 10, "var(--rose-deep)"],
+            ["🏅 Achievements", got, ACHV.length, "var(--lav-deep)"]];
+
+            rows.forEach(([name, val, max, col]) => {
+                const pct = Math.min(100, Math.round(val / max * 100)); const r = document.createElement("div"); r.className = "prog-row";
+                r.innerHTML = `<div class="name">${name}</div><div class="bar"><i style="width:${pct}%;background:${col}"></i></div><div class="pct">${val}</div>`; box.appendChild(r);
+            });
+            renderBadges();
+            const fg = $("#fav-grid"); fg.innerHTML = ""; const favs = Object.values(favMap());
+            if (!favs.length) fg.innerHTML = '<p class="sub">No favourites yet — go star some words! ⭐</p>';
+            else favs.forEach(w => fg.appendChild(wordCard(w)));
+        }
+
+        /*=== Settings logic ===*/
+
+        function buildFontSelect() {
+            const sel = $("#set-font"); sel.innerHTML = "";
+            Object.keys(FONTS).forEach(name => { const o = document.createElement("option"); o.value = name; o.textContent = name; sel.appendChild(o); });
+            sel.value = state.font;
+        }
+        function applyFont() { document.body.style.fontFamily = FONTS[state.font] || FONTS["Comic Sans"]; }
+        $("#set-font").addEventListener("change", e => { state.font = e.target.value; save(); applyFont(); toast("Font: " + state.font); });
+        $("#set-lang").addEventListener("change", e => setLang(e.target.value));
+        $("#set-rate").value = state.rate;
+        $("#set-rate").addEventListener("input", e => { state.rate = parseFloat(e.target.value); save(); });
+        $("#set-rate").addEventListener("change", () => speak(L().testHello));
+        $("#set-goal").value = state.dailyGoal;
+        $("#set-goal").addEventListener("change", e => { state.dailyGoal = parseInt(e.target.value); save(); renderGoal(); });
+        $("#set-testvoice").onclick = () => speak(L().testHello);
+        $("#btn-export").onclick = () => {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+            const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "bonjour-hola-progress.json"; a.click(); toast("💾 Exported!");
+        };
+        $("#btn-reset").onclick = () => {
+            if (confirm("Reset ALL progress in BOTH languages? This can't be undone.")) {
+                const lang = state.lang, font = state.font; state = JSON.parse(JSON.stringify(defaultState)); state.lang = lang; state.font = font;
+                state.lastVisit = new Date().toDateString(); state.streak = 1; state.dailyDate = state.lastVisit; save();
+                applyFont(); resetSelections(); renderAll(); toast("🧹 Fresh start!");
+            }
+        };
+
+        /* KEYBOARD for the flashcards */
+
+        document.addEventListener("keydown", e => {
+            if (!$("#flash").classList.contains("show")) return;
+            const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName); if (typing) return;
+            if (e.code === "Space") { e.preventDefault(); $("#flashcard").classList.toggle("flipped"); }
+            else if (e.key === "ArrowRight") $("#fc-got").click();
+            else if (e.key === "ArrowLeft") $("#fc-again").click();
+            else if (e.key.toLowerCase() === "s") $("#fc-say").click();
+        });
