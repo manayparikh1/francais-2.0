@@ -2339,23 +2339,77 @@
 
         $("#listen-play").onclick = () => { if (lCur) speak(lCur[0]); };
         $("#listen-check").onclick = () => {
-            if (!lCur) return; const g = $("#listen-input").value; if (!g.trim()) { toast("Type what you hear first 🙂"); return; }
+            if (!lCur) return;
+            const g = $("#listen-input").value;
+            if (!g.trim()) { toast("Type what you hear first 🙂"); return; }
 
             if (fold(g) === fold(lCur[0])) {
-                $("#listen-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${lCur[0]}</span> — 
-
-${lCur[1]}`; addXP(8); state.dictationRight++; save(); toast("👂 Perfect! +8 XP"); confetti(); checkAchievements();
+                $("#listen-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${lCur[0]}</span> — ${lCur[1]}`;
+                addXP(8);
+                state.dictationRight++;
+                save();
+                toast("👂 Perfect! +8 XP");
+                confetti();
+                checkAchievements();
+            } else if (stripAccents(g) === stripAccents(lCur[0])) {
+                $("#listen-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${lCur[0]}</span> — ${lCur[1]}<br><i>(You missed the accents)</i>`;
+                addXP(4);
+                state.dictationRight++;
+                save();
+                toast("⚠️ Almost! +4 XP");
+            } else {
+                $("#listen-reveal").innerHTML = `❌ You wrote “${g}”. It was <b>${lCur[0]}</b> — ${lCur[1]}`;
             }
-
-            else if (stripAccents(g) === stripAccents(lCur[0])) { $("#listen-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${lCur[0]}</span> — ${lCur[1]}<br><i>(You missed the accents)</i>`; addXP(4); state.dictationRight++; save(); toast("⚠️ Almost! +4 XP"); }
-
-            else if (stripAccents(g) === stripAccents(lCur[0])) { $("#listen-reveal").innerHTML = `🟡 Almost — watch the accents: <b>${lCur[0]}</b>`; addXP(4); }
-
-
-            else { $("#listen-reveal").innerHTML = `❌ You wrote “${g}”. It was <b>${lCur[0]}</b> — ${lCur[1]}`; }
         };
         $("#listen-skip").onclick = () => { if (lCur) $("#listen-reveal").innerHTML = `👀 <b>${lCur[0]}</b> — ${lCur[1]}`; };
         $("#listen-next").onclick = newDictation;
         $("#listen-input").addEventListener("keydown", e => { if (e.key === "Enter") $("#listen-check").click(); });
 
         /* SPELLL game logic */
+        let sCur = null;
+        function newSpell() {
+            sCur = shuffle(Object.values(L().VOCAB).flat())[0]; $("#spell-prompt").textContent = "“" + sCur[1] + "”";
+            $("#spell-input").value = ""; $("#spell-reveal").textContent = ""; speak(sCur[0]);
+        }
+        $("#spell-hear").onclick = () => { if (sCur) speak(sCur[0]); };
+        $("#spell-check").onclick = () => {
+            if (!sCur) return; const g = $("#spell-input").value; if (!g.trim()) { toast("Type your spelling first 🙂"); return; }
+            if (fold(g) === fold(sCur[0])) { $("#spell-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${sCur[0]}</span>`; addXP(6); state.spellRight++; save(); toast("⌨️ Perfect! +6 XP"); confetti(); checkAchievements(); }
+            else if (stripAccents(g) === stripAccents(sCur[0])) { $("#spell-reveal").innerHTML = `🟡 Almost — mind the accents: <b>${sCur[0]}</b>`; addXP(3); }
+            else { $("#spell-reveal").innerHTML = `❌ It's <b>${sCur[0]}</b>`; }
+        };
+        $("#spell-skip").onclick = () => { if (sCur) $("#spell-reveal").innerHTML = `👀 <b>${sCur[0]}</b>`; };
+        $("#spell-next").onclick = newSpell;
+        $("#spell-input").addEventListener("keydown", e => { if (e.key === "Enter") $("#spell-check").click(); });
+
+        /* ============================================================
+           VERBS
+           ============================================================ */
+
+        function renderVerbPicker() {
+            const box = $("#verb-picker"); box.innerHTML = "";
+            Object.keys(L().VERBS).forEach(v => {
+                const b = document.createElement("button"); b.className = "chip" + (v === vb ? " active" : ""); b.textContent = v;
+                b.onclick = () => { vb = v; tense = Object.keys(L().VERBS[vb].tenses)[0]; renderVerbPicker(); renderConj(); }; box.appendChild(b);
+            });
+        }
+        function renderTensePicker() {
+            const box = $("#tense-picker"); box.innerHTML = "";
+            Object.keys(L().VERBS[vb].tenses).forEach(t => {
+                const b = document.createElement("button"); b.className = "chip" + (t === tense ? " active" : ""); b.textContent = t;
+                b.onclick = () => { tense = t; renderTensePicker(); renderConj(); }; box.appendChild(b);
+            });
+        }
+        function renderConj() {
+            renderTensePicker(); const v = L().VERBS[vb];
+            $("#verb-meaning").textContent = `✨ ${vb} — ${v.meaning}`; $("#tense-note").textContent = L().TENSE_NOTES[tense] || "";
+            const body = $("#conj-body"); body.innerHTML = "";
+            v.tenses[tense].forEach(([p, f]) => {
+                const tr = document.createElement("tr"); const full = (p.endsWith("'") ? p : p + " ") + f;
+                tr.innerHTML = `<td class="pronoun">${p}</td><td><b>${f}</b> <button class="say">🔊</button></td>`;
+                tr.querySelector(".say").onclick = () => speak(full); body.appendChild(tr);
+            });
+        }
+
+        /* phrases */
+    
