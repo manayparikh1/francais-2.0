@@ -2436,6 +2436,51 @@
             const box = $("#num-grid"); box.innerHTML = "";
             L().NUMBERS.forEach(([d, w]) => { const el = document.createElement("div"); el.className = "num"; el.innerHTML = `<div class="d">${d}</div><div class="w">${w}</div>`; el.onclick = () => { speak(w); toast(d + " = " + w); }; box.appendChild(el); });
         }
-
-
         /*=====Grammar logic=====*/
+        function renderGrammar() {
+            const box = $("#grammar-list"); box.innerHTML = "";
+            L().GRAMMAR.forEach(([title, html]) => {
+                const el = document.createElement("div"); el.className = "acc";
+                el.innerHTML = `<div class="acc-head">${title}<span>＋</span></div><div class="acc-body">${html}</div>`;
+                el.querySelector(".acc-head").onclick = () => el.classList.toggle("open"); box.appenedChild(el);
+            });
+        }
+
+        /*Achievemnts logic*/
+        const ACHV = [
+            ["first_word", "🌱", "First word", "Learn your first word",
+                () => totalLearned() >= 1],
+            ["ten_words", "📚", "Bookworm", "Learn 10 words",
+                () => totalLearned() >= 10],
+            ["fifty_words", "🧠", "Word wizard", "Learn 50 words",
+                () => totalLearned() >= 50],
+            ["bilingual", "🌍", "Bilingual!", "Learn words in both languages", () => Object.keys(state.learned.fr || {}).length > 0 && Object.keys(state.learned.es ||
+                {}).length > 0],
+            ["streak3", "🔥", "On a roll", "Reach a 3-day streak", () => state.streak >= 3],
+            ["streak7", "🗓️", "Week strong", "Reach a 7-day streak", () => state.streak >= 7],
+            ["level5", "🎖️", "Rising star", "Reach level 5", () => levelFor(state.xp) >= 5],
+            ["quiz_perfect", "🏆", "Perfectionist", "Get a perfect quiz", () => !!state.quizPerfect],
+            ["match_win", "🧩", "Matchmaker", "Clear a match board", () => state.matchWins >= 1],
+            ["dictation5", "👂", "Good ears", "5 correct dictations", () => state.dictationRight >= 5],
+            ["spell5", "⌨️", "Speller", "5 perfect spellings", () => state.spellRight >= 5],
+            ["xp500", "⭐", "500 club", "Earn 500 XP",
+                () => state.xp >= 500],
+        ];
+
+        function checkAchievements() {
+            let u = false;
+            ACHV.forEach(([id, ico, name, , cond]) => { if (!state.achievements[id] && cond()) { state.achievements[id] = true; u = true; toast(ico + " Achievement: " + name + "!"); } });
+            if (u) { save(); confetti(); }
+        }
+
+        function renderBadges() {
+            const box = $("#badges"); box.innerHTML = "";
+            ACHV.forEach(([id, ico, name, desc]) => {
+                const earned = !!state.achievements[id]; const el = document.createElement("div");
+                el.className = "badge" + (earned ? " earned" : ""); el.innerHTML = `<div class="b-ico">${ico}</div><div class="b-name">${name}</div><div class="b-desc">${earned ? "Earned!" : desc}
+        </div>`; box.appendChild(el);
+            });
+        }
+
+        /*Progress logic*/
+    
