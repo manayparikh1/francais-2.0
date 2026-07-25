@@ -2412,4 +2412,30 @@
         }
 
         /* phrases */
-    
+
+
+        function renderPhraseCats() {
+            const box = $("#phrase-cats"); box.innerHTML = "";
+            Object.keys(L().PHRASES).forEach(c => {
+                const b = document.createElement("button"); b.className = "chip" + (c === pCat ? " active" : ""); b.textContent = c;
+                b.onclick = () => { pCat = c; renderPhraseCats(); renderPhrases(); }; box.appendChild(b);
+            });
+        }
+        function renderPhrases() {
+            const box = $("#phrase-list"); box.innerHTML = "";
+            L().PHRASES[pCat].forEach(([fr, en]) => {
+                const el = document.createElement("div"); el.className = "phrase";
+                el.innerHTML = `<div><div class="fr">${fr}</div><div class="en">${en}</div></div><button class="btn sky small">🔊</button>`;
+                el.querySelector("button").onclick = () => speak(fr); box.appendChild(el);
+            });
+        }
+
+        /*=== Numerals ===*/
+
+        function renderNumbers() {
+            const box = $("#num-grid"); box.innerHTML = "";
+            L().NUMBERS.forEach(([d, w]) => { const el = document.createElement("div"); el.className = "num"; el.innerHTML = `<div class="d">${d}</div><div class="w">${w}</div>`; el.onclick = () => { speak(w); toast(d + " = " + w); }; box.appendChild(el); });
+        }
+
+
+        /*=====Grammar logic=====*/
