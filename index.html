@@ -2298,3 +2298,64 @@
             shuffle(pairs).forEach(w => { const b = document.createElement("button"); b.className = "mcard"; b.textContent = w[0]; b.dataset.key = w[0]; b.dataset.side = "L"; b.onclick = () => pickMatch(b, w); L2.appendChild(b); });
             shuffle(pairs).forEach(w => { const b = document.createElement("button"); b.className = "mcard"; b.textContent = w[1]; b.dataset.key = w[0]; b.dataset.side = "R"; b.onclick = () => pickMatch(b, w); R.appendChild(b); });
         }
+
+
+        function pickMatch(b, w) {
+            if (b.classList.contains("done")) return;
+            if (!mSel) { mSel = b; b.classList.add("sel"); if (b.dataset.side === "L") speak(w[0]); return; }
+            if (mSel === b) { mSel = null; b.classList.remove("sel"); return; }
+            if (mSel.dataset.side === b.dataset.side) { mSel.classList.remove("sel"); mSel = b; b.classList.add("sel"); return; }
+
+
+            mMoves++; $("#match-moves").textContent = mMoves;
+            if (mSel.dataset.key === b.dataset.key) {
+                mSel.classList.remove("sel"); mSel.classList.add("done"); b.classList.add("done"); mSel = null;
+                mDone++; $("#match-done").textContent = mDone; addXP(4); markLearned(w[0]);
+                if (mDone === 6) { confetti(); state.matchWins++; save(); addXP(25); toast("🎉 Board cleared! +25 XP"); checkAchievements(); }
+            }
+            else { const a = mSel; a.classList.add("miss"); b.classList.add("miss"); setTimeout(() => { a.classList.remove("sel", "miss"); b.classList.remove("miss"); }, 450); mSel = null; }
+        }
+        $("#match-new").onclick = newMatch;
+
+        /*====Listen and dictation function */
+
+        let lCur = null; const listenCats = ["Words", "Phrases", "Numbers"];
+
+
+        function renderListenCats() {
+            const box = $("#listen-cats"); box.innerHTML = "";
+            listenCats.forEach(c => {
+                const b = document.createElement("button"); b.className = "chip" + (c === lCat ? " active" : ""); b.textContent = c;
+                b.onclick = () => { lCat = c; renderListenCats(); newDictation(); }; box.appendChild(b);
+            });
+        }
+        function dictationItem() {
+            if (lCat === "Phrases") { const p = shuffle(Object.values(L().PHRASES).flat())[0]; return [p[0], p[1]]; }
+            if (lCat === "Numbers") { const n = shuffle(L().NUMBERS)[0]; return [n[1], String(n[0])]; }
+            const w = shuffle(Object.values(L().VOCAB).flat())[0]; return [w[0], w[1]];
+        }
+        function newDictation() { lCur = dictationItem(); $("#listen-input").value = ""; $("#listen-reveal").textContent = ""; speak(lCur[0]); }
+
+
+        $("#listen-play").onclick = () => { if (lCur) speak(lCur[0]); };
+        $("#listen-check").onclick = () => {
+            if (!lCur) return; const g = $("#listen-input").value; if (!g.trim()) { toast("Type what you hear first 🙂"); return; }
+
+            if (fold(g) === fold(lCur[0])) {
+                $("#listen-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${lCur[0]}</span> — 
+
+${lCur[1]}`; addXP(8); state.dictationRight++; save(); toast("👂 Perfect! +8 XP"); confetti(); checkAchievements();
+            }
+
+            else if (stripAccents(g) === stripAccents(lCur[0])) { $("#listen-reveal").innerHTML = `✅ <span style="color:var(--sage-deep)">${lCur[0]}</span> — ${lCur[1]}<br><i>(You missed the accents)</i>`; addXP(4); state.dictationRight++; save(); toast("⚠️ Almost! +4 XP"); }
+
+            else if (stripAccents(g) === stripAccents(lCur[0])) { $("#listen-reveal").innerHTML = `🟡 Almost — watch the accents: <b>${lCur[0]}</b>`; addXP(4); }
+
+
+            else { $("#listen-reveal").innerHTML = `❌ You wrote “${g}”. It was <b>${lCur[0]}</b> — ${lCur[1]}`; }
+        };
+        $("#listen-skip").onclick = () => { if (lCur) $("#listen-reveal").innerHTML = `👀 <b>${lCur[0]}</b> — ${lCur[1]}`; };
+        $("#listen-next").onclick = newDictation;
+        $("#listen-input").addEventListener("keydown", e => { if (e.key === "Enter") $("#listen-check").click(); });
+
+        /* SPELLL game logic */
