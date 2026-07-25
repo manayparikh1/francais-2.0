@@ -2542,3 +2542,29 @@
             else if (e.key === "ArrowLeft") $("#fc-again").click();
             else if (e.key.toLowerCase() === "s") $("#fc-say").click();
         });
+
+        /*RENDER allll + the init*/
+
+        function renderAll() {
+            renderBrand(); renderStats(); renderGoal(); renderGreeting(); renderWOTD(); renderHomeTiles();
+            renderVocabCats(); renderVocabGrid();
+            renderFlashCats(); buildDeck();
+            renderQuizCats(); $("#quiz-live").style.display = "none"; $("#quiz-result").style.display = "none"; $("#quiz-start-box").style.display = "block";
+            newMatch();
+            renderListenCats(); newDictation();
+            newSpell();
+            renderVerbPicker(); renderConj();
+            renderPhraseCats(); renderPhrases();
+            renderNumbers(); renderGrammar(); renderProgress();
+        }
+        function init() {
+            $$(".langbtn").forEach(x => x.classList.toggle("active", x.dataset.lang === state.lang));
+            $("#set-lang").value = state.lang; buildFontSelect(); applyFont();
+            resetSelections(); pickVoice(); renderAll(); checkAchievements();
+            toast((state.lang === "fr" ? "Bienvenue ! 🥐 " : "¡Bienvenido! 🌮 ") + (state.streak > 1 ? state.streak + "-day streak!" : "Let's learn!"));
+        }
+        init();
+    </script>
+</body>
+
+</html>
