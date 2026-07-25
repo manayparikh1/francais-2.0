@@ -2234,3 +2234,67 @@
         $("#fc-got").onclick = () => { markLearned(deck[fi][0]); addXP(3); toast("😄 +3 XP"); nextFlash(); };
 
         function nextFlash() { fi++; if (fi >= deck.length) { confetti(); toast("🎉 Deck complete!"); fi = 0; deck = shuffle(deck); } showFlash(); }
+
+        /*============Quiz logic */
+
+        let qPool = [], qi = 0, qScore = 0; const QLEN = 10;
+        function renderQuizCats() {
+            const box = $("#quiz-cats"); box.innerHTML = "";
+            ["All", ...Object.keys(L().VOCAB)].forEach(c => {
+                const b = document.createElement("button"); b.className = "chip" + (c === qCat ? " active" : ""); b.textContent = c;
+                b.onclick = () => { qCat = c; renderQuizCats(); }; box.appendChild(b);
+            });
+        }
+        const quizPoolWords = () => qCat === "All" ? Object.values(L().VOCAB).flat() : L().VOCAB[qCat];
+        function startQuiz() {
+            const pool = quizPoolWords(); qPool = shuffle(pool).slice(0, Math.min(QLEN, pool.length)); qi = 0; qScore = 0;
+            $("#quiz-start-box").style.display = "none"; $("#quiz-result").style.display = "none"; $("#quiz-live").style.display = "block"; nextQ();
+        }
+        function distinctBy(arr, keyi) { const seen = new Set(), out = []; for (const x of arr) { if (!seen.has(x[keyi])) { seen.add(x[keyi]); out.push(x); } } return out; }
+        function nextQ() {
+            if (qi >= qPool.length) return finishQuiz();
+            const w = qPool[qi]; const all = Object.values(L().VOCAB).flat(); const dir = Math.random() < 0.5;
+            const wrongs = distinctBy(shuffle(all.filter(x => x[1] !== w[1])), 1).slice(0, 3); const opts = shuffle([w, ...wrongs]);
+            $("#quiz-question").innerHTML = dir ? `What does <b>${w[0]}</b> mean?` : `How do you say <b>“${w[1]}”</b> in ${L().name}?`;
+            $("#quiz-progress").style.width = (qi / qPool.length * 100) + "%"; $("#quiz-feedback").textContent = "";
+            const box = $("#quiz-options"); box.innerHTML = "";
+            opts.forEach(o => {
+                const b = document.createElement("button"); b.className = "opt"; b.textContent = dir ? o[1] : o[0];
+                b.onclick = () => answer(b, o, w, dir); box.appendChild(b);
+            });
+            if (dir) speak(w[0]);
+        }
+        function answer(btn, chosen, correct, dir) {
+            $$("#quiz-options .opt").forEach(b => b.onclick = null);
+            if (chosen[0] === correct[0]) { btn.classList.add("correct"); qScore++; addXP(10); $("#quiz-feedback").textContent = "✅ Correct!"; markLearned(correct[0]); speak(correct[0]); }
+            else {
+                btn.classList.add("wrong"); const want = dir ? correct[1] : correct[0];
+                $$("#quiz-options .opt").forEach(b => { if (b.textContent === want) b.classList.add("correct"); });
+                $("#quiz-feedback").innerHTML = `❌ It's <b>${want}</b>`;
+            }
+            setTimeout(() => { qi++; nextQ(); }, 1200);
+        }
+        function finishQuiz() {
+            $("#quiz-live").style.display = "none"; $("#quiz-result").style.display = "block";
+            state.gamesPlayed++; if (qScore > state.quizBest) state.quizBest = qScore;
+            const pct = Math.round(qScore / qPool.length * 100); let e = "🎉", m = "You're on fire!";
+            if (pct < 40) { e = "🌱"; m = "Every expert started here. Try again!"; }
+            else if (pct < 70) { e = "🙂"; m = "Nice — a little more practice and you've got it!"; }
+            else if (pct < 100) { e = "😄"; m = "Great job! So close to perfect."; }
+            else { e = "🏆"; m = "Perfect score! Bravo / ¡Bravo!"; state.quizPerfect = true; }
+            save(); $("#quiz-emoji").textContent = e; $("#quiz-score").textContent = `You scored ${qScore} / ${qPool.length}`; $("#quiz-msg").textContent = m;
+            if (pct >= 70) confetti(); checkAchievements();
+        }
+        $("#quiz-start").onclick = startQuiz; $("#quiz-retry").onclick = startQuiz;
+
+
+        /* MATCHH game logic */
+
+        let mSel = null, mMoves = 0, mDone = 0;
+        function newMatch() {
+            mSel = null; mMoves = 0; mDone = 0; $("#match-moves").textContent = 0; $("#match-done").textContent = 0;
+            const pairs = shuffle(Object.values(L().VOCAB).flat()).slice(0, 6);
+            const L2 = $("#match-left"), R = $("#match-right"); L2.innerHTML = ""; R.innerHTML = "";
+            shuffle(pairs).forEach(w => { const b = document.createElement("button"); b.className = "mcard"; b.textContent = w[0]; b.dataset.key = w[0]; b.dataset.side = "L"; b.onclick = () => pickMatch(b, w); L2.appendChild(b); });
+            shuffle(pairs).forEach(w => { const b = document.createElement("button"); b.className = "mcard"; b.textContent = w[1]; b.dataset.key = w[0]; b.dataset.side = "R"; b.onclick = () => pickMatch(b, w); R.appendChild(b); });
+        }
