@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:,">
     <title>Bonjour & Hola! — Learn French + Spanish</title>
     <style>
         /* ============================================================
@@ -13,32 +14,32 @@
    ============================================================ */
 
         :root {
-            --bg: #fdf8ef;
-            --card: #fff;
-            --ink: #3a2f28;
-            --ink-soft: #8a7a6c;
-            --line: #ecdcc4;
-            --line-soft: #f6ecdb;
+            --bg: #f9edc5;
+            --card: #fffcf0;
+            --ink: #4a2418;
+            --ink-soft: #a2664a;
+            --line: #eed49a;
+            --line-soft: #f5e7ba;
             /* 'correct' reads yellow, 'wrong' reads red — same names, new colours */
-            --sage: #fbeaba;
-            --sage-deep: #d99e14;
-            --rose: #f9dbd8;
-            --rose-deep: #c9453c;
-            --honey: #e8a91d;
+            --sage: #f8e293;
+            --sage-deep: #c58f00;
+            --rose: #f6cabe;
+            --rose-deep: #bc3620;
+            --honey: #eeb414;
             --r: 14px;
             /* photo fade for the secret backgrounds — lower shows more photo */
-            --scrim: rgba(253, 248, 239, .68)
+            --scrim: rgba(249, 237, 197, .68)
         }
 
         /* the whole site shifts accent with the language */
         body[data-lang="fr"] {
-            --accent: #c9453c;
-            --accent-soft: #fae7e4
+            --accent: #c22f1d;
+            --accent-soft: #f9dcd2
         }
 
         body[data-lang="es"] {
-            --accent: #d99e14;
-            --accent-soft: #fdf2d2
+            --accent: #d99800;
+            --accent-soft: #f9e6a6
         }
 
         * {
@@ -173,6 +174,35 @@
         .langbtn.active {
             background: var(--accent);
             color: #fff
+        }
+
+        /* backdrop button — lights up while a photo is on */
+        #bg-btn {
+            cursor: pointer;
+            border: 1px solid var(--line);
+            background: var(--card);
+            color: var(--ink-soft);
+            padding: 7px 15px;
+            border-radius: 99px;
+            font-size: .8rem;
+            white-space: nowrap;
+            transition: .15s;
+        }
+
+        #bg-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        #bg-btn.on {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff
+        }
+
+        #bg-btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px
         }
 
         /* stats — a quiet readout */
@@ -1447,6 +1477,8 @@
                     <button class="langbtn" data-lang="es">Español</button>
                 </div>
 
+                <button id="bg-btn" title="Change the background photo (or press B)">Backdrop</button>
+
                 <div class="stats">
                     <div class="stat lvl">
                         <div class="big" id="s-lvl">1</div>
@@ -1768,6 +1800,20 @@
                         </select>
                     </div>
                     <div class="setting-row">
+                        <div><b>Voice</b>
+                            <div style="font-size:.8rem;color:var(--ink-soft)">If you hear nothing, pick a different one
+                            </div>
+                        </div>
+                        <select class="set-select" id="set-voice"></select>
+                    </div>
+                    <div class="setting-row">
+                        <div><b>AI tutor key</b>
+                            <div style="font-size:.8rem;color:var(--ink-soft)">Saved only in this browser</div>
+                        </div>
+                        <input class="set-select" id="set-ai-key" type="password" placeholder="Paste your API key here"
+                            autocomplete="off" spellcheck="false">
+                    </div>
+                    <div class="setting-row">
                         <div><b>Test the voice</b>
                             <div style="font-size:.8rem;color:var(--ink-soft)" id="voice-info">Checking voices…</div>
                         </div>
@@ -1809,6 +1855,14 @@
 
     <div id="toast"></div>
     <script>
+
+        /* ==============================================================
+            AI TUTOR
+            The API key is stored in browser settings, not in the source.
+            ============================================================== */
+        const AI_URL = "https://ai.hackclub.com/proxy/v1/chat/completions";
+        const AI_MODEL = "qwen/qwen3-32b";
+
         /* ============================================================
            DATA — everything for both languages lives in DATA[lang]
            ============================================================ */
@@ -2299,7 +2353,8 @@
             lang: "fr", font: "Comic Sans", xp: 0, streak: 0, lastVisit: null,
             learned: { fr: {}, es: {} }, favourites: { fr: {}, es: {} },
             quizBest: 0, gamesPlayed: 0, dictationRight: 0, spellRight: 0, matchWins: 0,
-            dailyDate: null, dailyXP: 0, dailyGoal: 50, rate: 0.9, achievements: {}, quizPerfect: false
+            dailyDate: null, dailyXP: 0, dailyGoal: 50, rate: 0.9, achievements: {}, quizPerfect: false,
+            aiKey: ""
         };
         let state = load();
         function load() {
@@ -2364,45 +2419,126 @@
 
         let toastTimer; function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1900) }
 
-
-
-
-        /* speechh */
-
-        let voices = [];
-        function pickVoice() {
-            voices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : [];
-
-            const info = $("#voice-info"); if (info) { const v = voiceFor(L().code); info.textContent = v ? ("Using: " + v.name) : ("No " + L().name + " voice found — will still try.") }
-        }
-        function voiceFor(code) {
-            const c = code.toLowerCase();
-            return
-            voices.find(x => x.lang && x.lang.toLowerCase() === c) || voices.find(x => x.lang && x.lang.toLowerCase().startsWith(c.slice(0, 2))) || null
-        }
-        if ('speechSynthesis' in window) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice }
-        function speak(t) {
-            if (!('speechSynthesis' in window)) { toast("Speech is not supported here"); return }
-            speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = L().code; u.rate = state.rate; u.pitch = 1;
-            const
-
-                v = voiceFor(L().code); if (v) u.voice = v; speechSynthesis.speak(u)
-        }
-
-        /*CONFETTIII*/
-
         function confetti() {
-            const cols = ["#ffcf5c", "#ff9a9a", "#7fb7f0", "#86c79a", "#ffb877", "#b39df0"];
-            for (let i = 0; i < 44; i++) {
-                const c = document.createElement("div"); c.className = "confetti"; c.style.left = Math.random() * 100 + "vw";
-
-                c.style.background = cols[i % cols.length]; c.style.transform = `rotate(${Math.random() * 360}deg)`; document.body.appendChild(c);
-
-
-                c.animate([{ transform: "translateY(0) rotate(0)", opacity: 1 }, { transform: `translateY(105vh) rotate(${540 + Math.random() * 360}deg)`, opacity: .9 }],
-                    { duration: 1400 + Math.random() * 1200, easing: "cubic-bezier(.3,.7,.4,1)" }).onfinish = () => c.remove()
+            const colors = ["#c22f1d", "#d99800", "#4a2418", "#f6cabe", "#f8e293"];
+            for (let i = 0; i < 18; i++) {
+                const piece = document.createElement("div");
+                piece.className = "confetti";
+                piece.style.left = Math.random() * 100 + "vw";
+                piece.style.background = colors[i % colors.length];
+                document.body.appendChild(piece);
+                const drift = (Math.random() * 160 - 80) + "px";
+                const rotate = (Math.random() * 540 - 270) + "deg";
+                piece.animate([
+                    { transform: "translate3d(0, 0, 0) rotate(0deg)", opacity: 1 },
+                    { transform: `translate3d(${drift}, 105vh, 0) rotate(${rotate})`, opacity: 0 }
+                ], { duration: 1200 + Math.random() * 800, easing: "cubic-bezier(.2,.7,.2,1)" })
+                    .onfinish = () => piece.remove();
             }
         }
+
+
+
+
+        /* === ROBUST SPEECH ENGINE === */
+        let voices = [];
+        function pickVoice() {
+            if (!('speechSynthesis' in window)) return;
+            voices = speechSynthesis.getVoices();
+            const info = $("#voice-info");
+            if (info && typeof L === 'function') {
+                const v = voiceFor(L().code);
+                info.textContent = v ? ("Using: " + v.name) : ("Using browser default for " + L().name);
+            }
+            if (typeof buildVoiceSelect === 'function') buildVoiceSelect();
+        }
+
+        const BAD_VOICE = /albert|bad news|bahh|bells|boing|bubbles|cellos|eddy|flo|fred|good news|grandma|grandpa|jester|junior|kathy|organ|reed|rocko|sandy|shelley|superstar|trinoids|whisper|wobble|zarvox/i;
+        const PREFERRED_VOICES = {
+            fr: ["Amélie", "Jacques", "Thomas"],
+            es: ["Mónica", "Paulina"]
+        };
+
+        function voiceFor(code) {
+            if (!voices.length) return null;
+            // 1. User choice
+            if (state.voiceName && state.voiceName[state.lang]) {
+                const w = voices.find(x => x.name === state.voiceName[state.lang]);
+                if (w) return w;
+            }
+            // 2. Best match
+            const c = code.toLowerCase().replace("_", "-"), base = c.split("-")[0];
+            const pool = voices.filter(v => {
+                const vLang = v.lang.toLowerCase().replace("_", "-");
+                return (vLang === c || vLang.startsWith(base + "-") || vLang === base) && !BAD_VOICE.test(v.name);
+            });
+            if (!pool.length) return null;
+            const preferred = (PREFERRED_VOICES[base] || []).map(name => pool.find(v => v.name === name)).find(Boolean);
+            if (preferred) return preferred;
+            const score = v => {
+                const vLang = v.lang.toLowerCase().replace("_", "-");
+                return (/google|enhanced|premium|siri|natural/i.test(v.name) ? 10 : 0) + (vLang === c ? 5 : 0) + (v.localService ? 2 : 0);
+            };
+            return pool.sort((a, b) => score(b) - score(a))[0];
+        }
+
+        if ('speechSynthesis' in window) {
+            pickVoice();
+            speechSynthesis.onvoiceschanged = pickVoice;
+            speechSynthesis.cancel(); // Clear any stale state
+        }
+
+        function speak(t) {
+            if (!('speechSynthesis' in window)) return;
+            if (!voices.length) pickVoice();
+
+            const synth = speechSynthesis;
+            if (typeof synth.resume === "function") synth.resume();
+            const langCode = L().code;
+            const chosen = voiceFor(langCode);
+            const attempts = chosen ? [chosen, null] : [null];
+            let ai = 0, speakStarted = false;
+
+            const say = () => {
+                if (ai >= attempts.length) return;
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = langCode;
+                u.rate = state.rate || 0.9;
+                if (attempts[ai]) u.voice = attempts[ai];
+
+                u.onstart = () => {
+                    speakStarted = true;
+                    speechStatus("Playing: " + (u.voice ? u.voice.name : "browser default"));
+                };
+
+                u.onerror = e => {
+                    if (e.error === "not-allowed") toast("Click anywhere once to enable audio!");
+                    else if (!speakStarted && e.error !== "canceled") { ai++; say(); }
+                };
+
+                // The Magic Fix: Cancel, then a tiny delay, then Speak
+                synth.cancel();
+                setTimeout(() => {
+                    synth.speak(u);
+                    // Watchdog: If it doesn't start in 400ms, force next attempt
+                    setTimeout(() => { if (!speakStarted && !synth.speaking) { ai++; say(); } }, 400);
+                }, 50);
+            };
+            say();
+        }
+
+        function speechStatus(msg) { const el = $("#voice-info"); if (el) el.textContent = msg; }
+        function unlockSpeech() {
+            if (!('speechSynthesis' in window)) return;
+            if (typeof speechSynthesis.resume === "function") speechSynthesis.resume();
+            const u = new SpeechSynthesisUtterance(" ");
+            u.volume = 0;
+            speechSynthesis.speak(u);
+        }
+        document.addEventListener("pointerdown", unlockSpeech, { once: true, capture: true });
+        document.addEventListener("keydown", unlockSpeech, { once: true, capture: true });
+
+
 
         /* ============================================================
       TABS and the LANGUAGEs
@@ -2464,7 +2600,10 @@
             $("#wotd-fr").textContent = w[0]; $("#wotd-ph").textContent = "/ " + w[2] + " /"; $("#wotd-en").textContent = w[1];
 
             $("#wotd-fr").textContent = w[0]; $("#wotd-ph").textContent = "/ " + w[2] + " /"; $("#wotd-en").textContent = w[1];
-            $("#wotd-say").onclick = () => { speak(w[0]); markLearned(w[0]) }
+            $("#wotd-say").onclick = () => {
+                speak(w[0]);
+                if (!learnedMap()[w[0]]) { markLearned(w[0]); addXP(2); toast("+2 XP · " + w[0]) }
+            }
         }
 
         const HOME_TILES = [["01", "Vocabulary", "120 words per language", "vocab"], ["02", "Phrases", "Survival language", "phrases"], ["03", "Verbs", "Three tenses", "verbs"], ["04", "Flashcards", "Flip and remember", "flash"], ["05", "Quiz", "Earn XP", "quiz"], ["06", "Match", "Pair them up", "match"], ["07", "Listen", "Type what you hear", "listen"], ["08", "Spell", "Spell the word", "spell"]];
@@ -2509,7 +2648,11 @@
             el.innerHTML = `<span class="fr">${w[0]}</span><span class="ph">/ ${w[2]} /</span><span class="en">${w[1]}</span>
 
  <div class="row"><button class="say">Hear</button><button class="fav ${fav ? 'on' : ''}">⭐</button></div>`;
-            el.querySelector(".say").onclick = () => { speak(w[0]); markLearned(w[0]); addXP(2); toast("+2 XP · " + w[0]) };
+            el.querySelector(".say").onclick = () => {
+                speak(w[0]);
+                // XP only the first time — clicking Hear forever should not farm points
+                if (!learnedMap()[w[0]]) { markLearned(w[0]); addXP(2); toast("+2 XP · " + w[0]) }
+            };
             el.querySelector(".fav").onclick = e => {
                 if (favMap()[w[0]]) { delete favMap()[w[0]]; e.target.classList.remove("on") }
                 else { favMap()[w[0]] = w; e.target.classList.add("on"); toast("Saved") } save()
@@ -2656,7 +2799,7 @@
             if (lCat === "Numbers") { const n = shuffle(L().NUMBERS)[0]; return [n[1], String(n[0])] }
             const w = shuffle(Object.values(L().VOCAB).flat())[0]; return [w[0], w[1]]
         }
-        function newDictation() { lCur = dictationItem(); $("#listen-input").value = ""; $("#listen-reveal").textContent = ""; speak(lCur[0]) }
+        function newDictation(quiet) { lCur = dictationItem(); $("#listen-input").value = ""; $("#listen-reveal").textContent = ""; if (!quiet) speak(lCur[0]) }
 
 
         $("#listen-play").onclick = () => { if (lCur) speak(lCur[0]) };
@@ -2684,14 +2827,14 @@
             }
         };
         $("#listen-skip").onclick = () => { if (lCur) $("#listen-reveal").innerHTML = `<b>${lCur[0]}</b> — ${lCur[1]}` };
-        $("#listen-next").onclick = newDictation;
+        $("#listen-next").onclick = () => newDictation();   // no args — the click event must not become the 'quiet' flag
         $("#listen-input").addEventListener("keydown", e => { if (e.key === "Enter") $("#listen-check").click() });
 
         /* SPELLL game logic */
         let sCur = null;
-        function newSpell() {
+        function newSpell(quiet) {
             sCur = shuffle(Object.values(L().VOCAB).flat())[0]; $("#spell-prompt").textContent = "“" + sCur[1] + "”";
-            $("#spell-input").value = ""; $("#spell-reveal").textContent = ""; speak(sCur[0])
+            $("#spell-input").value = ""; $("#spell-reveal").textContent = ""; if (!quiet) speak(sCur[0])
         }
         $("#spell-hear").onclick = () => { if (sCur) speak(sCur[0]) };
         $("#spell-check").onclick = () => {
@@ -2701,7 +2844,7 @@
             else { $("#spell-reveal").innerHTML = `Not quite — it's <b>${sCur[0]}</b>` }
         };
         $("#spell-skip").onclick = () => { if (sCur) $("#spell-reveal").innerHTML = `<b>${sCur[0]}</b>` };
-        $("#spell-next").onclick = newSpell;
+        $("#spell-next").onclick = () => newSpell();        // same — keep the event out of 'quiet'
         $("#spell-input").addEventListener("keydown", e => { if (e.key === "Enter") $("#spell-check").click() });
 
         /* ============================================================
@@ -2784,14 +2927,13 @@
             ["quiz_perfect", "Perfectionist", "Get a perfect quiz", () => !!state.quizPerfect],
             ["match_win", "Matchmaker", "Clear a match board", () => state.matchWins >= 1],
             ["dictation5", "Good ears", "5 correct dictations", () => state.dictationRight >= 5],
-            ["spell5", "⌨️", "Speller", "5 perfect spellings", () => state.spellRight >= 5],
-            ["xp500", "⭐", "500 club", "Earn 500 XP",
-                () => state.xp >= 500],
+            ["spell5", "Speller", "5 perfect spellings", () => state.spellRight >= 5],
+            ["xp500", "500 club", "Earn 500 XP", () => state.xp >= 500],
         ];
 
         function checkAchievements() {
             let u = false;
-            ACHV.forEach(([id, name, , cond]) => { if (!state.achievements[id] && cond()) { state.achievements[id] = true; u = true; toast("Achievement unlocked — " + name) } });
+            ACHV.forEach(([id, name, , cond]) => { if (!state.achievements[id] && typeof cond === "function" && cond()) { state.achievements[id] = true; u = true; toast("Achievement unlocked — " + name) } });
             if (u) { save(); confetti() }
         }
 
@@ -2842,15 +2984,40 @@
         $("#set-goal").value = state.dailyGoal;
         $("#set-goal").addEventListener("change", e => { state.dailyGoal = parseInt(e.target.value); save(); renderGoal() });
         $("#set-testvoice").onclick = () => speak(L().testHello);
+
+        function buildVoiceSelect() {
+            const sel = $("#set-voice"); if (!sel) return;
+            sel.innerHTML = "";
+            const base = L().code.slice(0, 2);
+            const auto = document.createElement("option");
+            auto.value = "";
+            auto.textContent = "Automatic — " + (voiceFor(L().code) ? voiceFor(L().code).name : "browser default");
+            sel.appendChild(auto);
+            voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(base)).forEach(v => {
+                const o = document.createElement("option");
+                o.value = v.name;
+                o.textContent = v.name + " (" + v.lang + ")" + (BAD_VOICE.test(v.name) ? " — may be silent" : "");
+                sel.appendChild(o);
+            });
+            sel.value = (state.voiceName || {})[state.lang] || "";
+        }
+        function syncAIKeyInput() { const input = $("#set-ai-key"); if (input) input.value = state.aiKey || ""; }
+        $("#set-voice").addEventListener("change", e => {
+            state.voiceName = state.voiceName || {};
+            state.voiceName[state.lang] = e.target.value || null;
+            save();
+            speak(L().testHello);      // instant feedback with the new voice
+        });
+        $("#set-ai-key").addEventListener("input", e => { state.aiKey = e.target.value; save(); });
         $("#btn-export").onclick = () => {
             const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
             const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "bonjour-hola-progress.json"; a.click(); toast("Progress exported")
         };
         $("#btn-reset").onclick = () => {
             if (confirm("Reset ALL progress in BOTH languages? This can't be undone.")) {
-                const lang = state.lang, font = state.font; state = JSON.parse(JSON.stringify(defaultState)); state.lang = lang; state.font = font;
+                const lang = state.lang, font = state.font, aiKey = state.aiKey; state = JSON.parse(JSON.stringify(defaultState)); state.lang = lang; state.font = font; state.aiKey = aiKey;
                 state.lastVisit = new Date().toDateString(); state.streak = 1; state.dailyDate = state.lastVisit; save();
-                applyFont(); resetSelections(); renderAll(); toast("Fresh start")
+                applyFont(); resetSelections(); syncAIKeyInput(); renderAll(); toast("Fresh start")
             }
         };
 
@@ -2899,11 +3066,13 @@
             if (!src) {
                 document.body.classList.remove("bg-photo");
                 document.body.style.removeProperty("--bg-img");
+                $("#bg-btn").classList.remove("on");
                 state.bg = null; save();
                 return
             }
             document.body.style.setProperty("--bg-img", 'url("' + encodeURI(src) + '")');
             document.body.classList.add("bg-photo");
+            $("#bg-btn").classList.add("on");
             state.bg = src; save()
         }
 
@@ -2968,6 +3137,7 @@
             catch (e) { applyBackground(null); bgIndex = -1 }
         }
 
+        $("#bg-btn").addEventListener("click", cycleBackground);
         $("#brand-flag").addEventListener("click", cycleBackground);
         $("#brand-flag").title = "Psst — click me";
 
@@ -2981,9 +3151,6 @@
             Chats with Hack Club's AI. The tutor follows whichever
             language you're currently in.
             ============================================================ */
-        const AI_KEY = "";
-        const AI_URL = "https://ai.hackclub.com/proxy/v1/chat/completions";
-        const AI_MODEL = "qwen/qwen3-32b";
 
         let chat = [];   // conversation so far
 
@@ -3011,8 +3178,9 @@
             const q = input.value.trim();
             if (!q) return;
 
-            if (!AI_KEY) {
-                addMsg("The tutor is not configured yet.", "err");
+            const apiKey = (state.aiKey || "").trim();
+            if (!apiKey) {
+                addMsg("Add your AI tutor key in Settings first.", "err");
                 return;
             }
 
@@ -3026,7 +3194,7 @@
             try {
                 const r = await fetch(AI_URL, {
                     method: "POST",
-                    headers: { "Authorization": "Bearer " + AI_KEY, "Content-Type": "application/json" },
+                    headers: { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: AI_MODEL,
                         messages: [{ role: "system", content: tutorSystem() }, ...chat]
@@ -3086,8 +3254,8 @@
             renderFlashCats(); buildDeck();
             renderQuizCats(); $("#quiz-live").style.display = "none"; $("#quiz-result").style.display = "none"; $("#quiz-start-box").style.display = "block";
             newMatch();
-            renderListenCats(); newDictation();
-            newSpell();
+            renderListenCats(); newDictation(true);
+            newSpell(true);
             renderVerbPicker(); renderConj();
             renderPhraseCats(); renderPhrases();
             renderNumbers(); renderGrammar(); renderProgress()
@@ -3096,7 +3264,7 @@
             $$(".langbtn").forEach(x => x.classList.toggle("active", x.dataset.lang === state.lang));
             $("#set-lang").value = state.lang; buildFontSelect(); applyFont();
             document.body.dataset.lang = state.lang;
-            resetSelections(); pickVoice(); renderAll(); checkAchievements(); restoreBackground();
+            syncAIKeyInput(); resetSelections(); pickVoice(); renderAll(); checkAchievements(); restoreBackground();
             toast((state.lang === "fr" ? "Bienvenue — " : "¡Bienvenido! — ") + (state.streak > 1 ? state.streak + "-day streak!" : "Let's learn!"))
         }
         init();
